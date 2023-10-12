@@ -1,0 +1,132 @@
+name: Auto Build Termux Release old
+
+on:
+  workflow_dispatch:
+#  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v3
+      with:
+        repository: 'termux/termux-app'
+        ref: 'v0.118.0'
+          
+    - name: Modify
+      run: |
+        ###
+        rep(){ sed -i "s/$1/$2/g" $3 ;}
+        
+        # build arm64-v8a only
+        rep "abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'" "abiFilters 'arm64-v8a'" app/build.gradle
+        
+        # chage extra key layout
+        rep "\\[\\['ESC','\\/',{key: '-', popup: '|'},'HOME','UP','END','PGUP'\\], \\['TAB','CTRL','ALT','LEFT','DOWN','RIGHT','PGDN'\\]\\]" \
+                "\\[\\[\
+                {key: 'ESC', popup: {macro: 'ESC :q ENTER', display: 'quit'}}\
+                , {key: '~',popup: '\\\`'}\
+                , {key: '\\\\\\\\\\/', popup: '^'}\
+                , {key: 'KEYBOARD', popup: {macro: 'CTRL d', display: 'exit'}}\
+                , {key: '=', popup: '+'}\
+                , {key: 'UP', popup: 'PGUP'}\
+                , {key: 'BACKSLASH', popup: '|'}\
+                ],[\
+                {key: 'CTRL', popup: {macro: 'ESC F5 ENTER', display: 'RUN'}}\
+                , {key: 'TAB', popup: {macro: 'ESC :w ENTER', display: 'save'}}\
+                , {key: ':', popup: ';'}\
+                , {key: '-', popup: '_'}\
+                , {key: 'LEFT', popup: 'HOME'}\
+                , {key: 'DOWN', popup: 'PGDN'}\
+                , {key: 'RIGHT', popup: 'END'}\
+                \\]\\]" \
+        termux-shared/src/main/java/com/termux/shared/settings/properties/TermuxPropertyConstants.java
+        
+        # use lessKnownCharacterDisplay and arrowTriangleVariationDisplay
+        sed -i '163 i putAll(LESS_KNOWN_CHARACTERS_DISPLAY);' termux-shared/src/main/java/com/termux/shared/terminal/io/extrakeys/ExtraKeysConstants.java
+        sed -i '163 i putAll(ARROW_TRIANGLE_VARIATION_DISPLAY);' termux-shared/src/main/java/com/termux/shared/terminal/io/extrakeys/ExtraKeysConstants.java
+        
+        # remove settingsButtonView
+        sed -i "523asettingsButton.setVisibility(View.GONE);" app/src/main/java/com/termux/app/TermuxActivity.java
+        # change core version
+        # sed -i 162,166d app/build.gradle
+        # addLine(){
+        #     sed -i "162a$1" app/build.gradle
+        # }
+        # addLine 'downloadBootstrap("aarch64", "6ef5d51ebcc98cabec178de58b3846d192e3c47f1575f6319c0d55b4b2550ee8", version)'
+        # addLine 'downloadBootstrap("arm",     "39f371b9b0892a5e263993eab8fc8d1f58020a7df78372d134184e8da3d5d18e", version)'
+        # addLine 'downloadBootstrap("i686",    "2355c44da98c3990bce1fc527e36b9f9f913bb8d814d73601811fc62bb86d864", version)'
+        # addLine 'downloadBootstrap("x86_64",  "21ced5aacde882999306a46f913191bbea134af38532fb85ef958f6822a8730c", version)'
+        # addLine 'def version = "2022.04.21-r1"'
+    - name: Build
+      run: |
+        ./gradlew assembleDebug
+    - name: Copy and rename files
+      run: |
+        remote_version=$(cat termux-app/app/build.gradle |grep "versionName \"" |awk -F "\"" '{print $2}')
+        echo "lastest version: $remote_version"
+        /app/build/outputs/apk/debug
+        for var in $(ls)
+        do
+          if [ ${var##*.} == "apk" ];then
+             mv -f "$var" $(echo "$var"|sed 's/app/' |sed 's/_debug/'-v${remote_version}/)
+          fi
+        done
+        
+        for var in universal arm64-v8a armeabi-v7a x86_64 x86
+          do mkdir -p $var && mv *$var*.apk $var
+        done
+#     - name: Store generated APK file
+#       uses: actions/upload-artifact@v2
+#       with:
+#         name: termux-app
+#         path: ./app/build/outputs/apk/debug
+# #         path: ./termux-shared/src/main/java/com/termux/shared/settings/properties/TermuxPropertyConstants.java     # debug
+
+    - name: Store generated universal APK file
+      uses: actions/upload-artifact@v2
+      with:
+        name: termux-app-universal
+        path: |
+            ./app/build/outputs/apk/debug/universal
+            ./app/build/outputs/apk/debug/output-metadata.json
+    - name: Store generated arm64-v8a APK file
+      uses: actions/upload-artifact@v2
+      with:
+        name: termux-app-arm64-v8a
+        path: |
+          ./app/build/outputs/apk/debug/arm64-v8a
+          ./app/build/outputs/apk/debug/output-metadata.json
+    - name: Store generated armeabi-v7a APK file
+      uses: actions/upload-artifact@v2
+      with:
+        name: termux-app-armeabi-v7a
+        path: |
+          ./app/build/outputs/apk/debug/armeabi-v7a
+          ./app/build/outputs/apk/debug/output-metadata.json
+    - name: Store generated x86_64 APK file
+      uses: actions/upload-artifact@v2
+      with:
+        name: termux-app-x86_64
+        path: |
+          ./app/build/outputs/apk/debug/x86_64
+          ./app/build/outputs/apk/debug/output-metadata.json
+    - name: Store generated x86 APK file
+      uses: actions/upload-artifact@v2
+      with:
+        name: termux-app-x86
+        path: |
+          ./app/build/outputs/apk/debug/x86
+          ./app/build/outputs/apk/debug/output-metadata.json
+#     - name: Upload Apk to WeTransfer
+#       run: |
+#         
+#          curl -sL https://git.io/file-transfer | sh
+#         ./transfer wet ./app/build/outputs/apk/debug/*.apk
+#     - name: Delete workflow runs
+#       uses: GitRML/delete-workflow-runs@main
+#       with:
+#         retain_days: 1
+#         keep_minimum_runs: 3
+

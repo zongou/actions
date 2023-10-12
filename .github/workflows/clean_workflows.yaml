@@ -1,0 +1,49 @@
+name: Clean Workflows
+
+on:
+  workflow_dispatch:
+    inputs:
+        retain_days:
+          description: 'retain_days:'
+          default: 30
+        keep_minimum_runs:
+          description: 'keep_minimum_runs:'
+          default: 6
+          required: true
+        dry_run:
+          description: dry_run:'
+          default: false
+#  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Workflow runs delete
+      # You may pin to the exact commit or the version.
+      # uses: InfraWay/delete-workflow-runs@7cd36dd5e346e2d44223ebb0e4d36f8a0391dac2
+      uses: InfraWay/delete-workflow-runs@v2.1.2
+      with:
+        # The token used to authenticate.
+        # token: # default is ${{ github.token }}
+        # The base api url to be used in enterprise github instances
+        # baseUrl: # optional, default is https://api.github.com
+        # The name of the repository.
+        # repository: # default is ${{ github.repository }}
+        # The number of days.
+        # retain_days: # default is 30
+        retain_days: ${{ github.event.inputs.retain_days }}
+        # The minimum runs to keep for each workflow.
+        # keep_minimum_runs: # default is 6
+        keep_minimum_runs: ${{ github.event.inputs.keep_minimum_runs }}
+        # The name or filename of the workflow. if not set then it will target all workflows.
+        # delete_workflow_pattern: # optional
+        # Remove workflow by state: active, deleted, disabled_fork, disabled_inactivity, disabled_manually
+        # delete_workflow_by_state_pattern: # optional
+        # Remove workflow by conclusion: action_required, cancelled, failure, skipped, success
+        # delete_run_by_conclusion_pattern: # optional
+        # Only log actions, do not perform any delete operations
+        # dry_run: # optional
+        dry_run: ${{ github.event.inputs.dry_run }}
+        # Status of run to for filtering
+        # status: # optional

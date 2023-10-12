@@ -1,0 +1,75 @@
+name: Test matrix build nodejs android
+run-name: Matrix build nodejs android
+on:
+  # push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node_version: [18.17.1]
+        android_sdk_version: [24]
+        target_arch: [arm64]
+
+    steps:
+      - uses: actions/checkout@main
+      - name: Print env
+        run: |
+          env
+          cat /proc/cpuinfo
+          tree ${GITHUB_WORKSPACE}
+
+      - name: Get source
+        run: |
+          curl -Lks https://nodejs.org/dist/v${{matrix.node_version}}/node-v${{matrix.node_version}}.tar.xz | xz -d | tar -x
+          # git clone https://github.com/nodejs/node.git
+
+          # cd node
+          # git fetch origin v${{matrix.node_version}}
+          # git checkout v${{matrix.node_version}}
+
+      - name: Patch source
+        working-directory: node-v${{matrix.node_version}}
+        run: |
+          patch --strip=1 --input=${GITHUB_WORKSPACE}/nodejs/${{matrix.node_version}}.patch
+
+          # ../deps/zlib/cpu_features.c:43:10: fatal error: 'cpu-features.h' file not found
+          if test -f ./deps/zlib/cpu_features.c; then
+            sed -i "s|#include <cpu-features.h>|#include \"${ANDROID_NDK_HOME}/sources/android/cpufeatures/cpu-features.h\"|" deps/zlib/cpu_features.c
+          fi
+
+      - name: Configure
+        working-directory: node-v${{matrix.node_version}}
+        run: |
+          # HOST_OS="linux"
+          # HOST_ARCH="x86_64"
+          # export CC_host=$(command -v gcc)
+          # export CXX_host=$(command -v g++)
+          # export GYP_DEFINES="target_arch=${{matrix.target_arch}} v8_target_arch=${{matrix.target_arch}} android_target_arch=${{matrix.target_arch}} host_os=${HOST_OS} OS=android"
+
+          # ./android-configure ${ANDROID_NDK_HOME} ${{matrix.android_sdk_version}} ${{matrix.target_arch}}
+
+          source ${GITHUB_WORKSPACE}/nodejs/android-configure ${ANDROID_NDK_HOME} ${{matrix.android_sdk_version}} ${{matrix.target_arch}}
+
+      - name: Build
+        working-directory: node-v${{matrix.node_version}}
+        run: |
+          make -j8
+
+      - name: Tree files
+        run: |
+          tree node-v${{matrix.node_version}}/out
+
+      - uses: actions/upload-artifact@main
+        with:
+          name: nodejs-${{ matrix.node_version }}-android${{matrix.android_sdk_version}}-${{matrix.target_arch}}
+          path: node-v${{matrix.node_version}}/out/Release/node
+
+      - uses: actions/upload-artifact@main
+        with:
+          name: nodejs-${{ matrix.node_version }}-android${{matrix.android_sdk_version}}-${{matrix.target_arch}}-all
+          path: node-v${{matrix.node_version}}/out/Release
