@@ -58,19 +58,16 @@ jobs:
       - name: Patch source
         working-directory: node-v${{ github.event.inputs.node_version }}
         run: |
-          # patch --strip=1 --input=${GITHUB_WORKSPACE}/nodejs/${{ github.event.inputs.node_version }}.patch --no-backup-if-mismatch -t
+          # patch --strip=1 < ${GITHUB_WORKSPACE}/nodejs/${{ github.event.inputs.node_version }}.patch --no-backup-if-mismatch -t
 
           # handler-outside.cc:(.text._ZN2v88internal12trap_handler17EnableTrapHandlerEb+0x35): undefined reference to `v8::internal::trap_handler::RegisterDefaultTrapHandler()'
-          patch --input=${PWD}/android-patches/trap-handler.h.patch --no-backup-if-mismatch -t
+          patch -f ./deps/v8/src/trap-handler/trap-handler.h < ./android-patches/trap-handler.h.patch --no-backup-if-mismatch -t
 
           # g++: error: unrecognized command line option ‘-msign-return-address=all’
           sed -i "s|o\['cflags'\]+=\['-msign-return-address=all'\]|warn('-msign-return-address=all no longer exists!')|" configure.py
 
           # ../deps/zlib/cpu_features.c:43:10: fatal error: 'cpu-features.h' file not found
           if test -f ./deps/zlib/cpu_features.c; then
-              # cp "${ANDROID_NDK_HOME}/sources/android/cpufeatures/cpu-features.h" deps/zlib/cpu-features.h
-              # find "${ANDROID_NDK_HOME}" -name 'cpu-features.*' -exec cp {} deps/zlib/ \;
-              # ls deps/zlib/cpu-features.*
               sed -i 's:#include <cpu-features.h>:#include "cpu-features.c":' ./deps/zlib/cpu_features.c
           fi
 
@@ -79,7 +76,7 @@ jobs:
 
           # build with ninja patch
           sudo apt install ninja-build
-          patch --strip=1 --input=${GITHUB_WORKSPACE}/nodejs/build_with_ninja.patch --no-backup-if-mismatch -t
+          patch --strip=1 < ${GITHUB_WORKSPACE}/nodejs/build_with_ninja.patch --no-backup-if-mismatch -t
 
           # ninja: error: '../../deps/uv/src/unix/pthread-fixes.c', needed by 'obj.host/deps/uv/src/unix/libuv.pthread-fixes.o', missing and no known rule to make it
           if grep -q "android: remove pthread-fixes.c" deps/uv/ChangeLog; then 
