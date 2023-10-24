@@ -1,0 +1,3 @@
+[submodule "ndk-toolchain"]
+	path = ndk-toolchain
+	url = https://github.com/zongou/ndk-toolchain

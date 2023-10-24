@@ -5,7 +5,7 @@ on:
     inputs:
       node_version:
         description: "node version:"
-        default: 18.17.1
+        default: 20.9.0
         required: true
       android_sdk_version:
         description: "android sdk version:"
@@ -16,7 +16,7 @@ on:
         default: arm64
         required: true
       node_mirror:
-        description: "nodejs source mirror:[default|ustc|tsinghua|aliyun|tencent]"
+        description: "nodejs source mirror:[default|github]"
         default: default
         required: true
 
@@ -34,26 +34,34 @@ jobs:
 
       - name: Get source
         run: |
-          # Select source mirror
-          default=https://nodejs.org/dist
-          ustc=https://mirrors.ustc.edu.cn/node
-          tsinghua=https://mirrors.tuna.tsinghua.edu.cn/nodejs
-          aliyun=https://registry.npmmirror.com/-/binary/node
-          tencent=http://mirrors.cloud.tencent.com/nodejs
+          # nodejs mirrors
+          # default=https://nodejs.org/dist
+          # ustc=https://mirrors.ustc.edu.cn/node
+          # tsinghua=https://mirrors.tuna.tsinghua.edu.cn/nodejs
+          # aliyun=https://registry.npmmirror.com/-/binary/node
+          # tencent=http://mirrors.cloud.tencent.com/nodejs
 
-          if ! test ${${{ github.event.inputs.node_mirror }}+1}; then
-            echo "mirror:[${{ github.event.inputs.node_mirror }}] not exists."
-            exit 1
-          fi
-
-          source_archive_url="${${{ github.event.inputs.node_mirror }}}/v${{ github.event.inputs.node_version }}/node-v${{ github.event.inputs.node_version }}.tar.xz"
-          echo "source_archive_url:${source_archive_url}"
-          curl -Lks ${source_archive_url} | xz -d | tar -x
+          case default in
+          default)
+              source_archive_url="https://nodejs.org/dist/v21.1.0/node-v21.1.0.tar.xz"
+              echo "source_archive_url:${source_archive_url}"
+              curl -Lks "${source_archive_url}" | xz -d | tar -x
+              ;;
+          github)
+              source_archive_url="https://github.com/nodejs/node/archive/refs/tags/v21.1.0.tar.gz"
+              echo "source_archive_url:${source_archive_url}"
+              curl -Lks "${source_archive_url}" | gzip -d | tar -x
+              ;;
+          *) ;;
+          esac
 
       - name: Patch source
         working-directory: node-v${{ github.event.inputs.node_version }}
         run: |
           # patch --strip=1 --input=${GITHUB_WORKSPACE}/nodejs/${{ github.event.inputs.node_version }}.patch --no-backup-if-mismatch -t
+
+          # handler-outside.cc:(.text._ZN2v88internal12trap_handler17EnableTrapHandlerEb+0x35): undefined reference to `v8::internal::trap_handler::RegisterDefaultTrapHandler()'
+          patch --input=${PWD}/android-patches/trap-handler.h.patch --no-backup-if-mismatch -t
 
           # g++: error: unrecognized command line option ‘-msign-return-address=all’
           sed -i "s|o\['cflags'\]+=\['-msign-return-address=all'\]|warn('-msign-return-address=all no longer exists!')|" configure.py
@@ -162,7 +170,8 @@ jobs:
                 v8_target_arch=${TARGET_ARCH} \
                 android_target_arch=${TARGET_ARCH} \
                 host_os=${HOST_OS} \
-                OS=android"
+                OS=android \
+                android_ndk_path=${ANDROID_NDK_PATH}"
             }
 
           configure_and_build_with_make() {
