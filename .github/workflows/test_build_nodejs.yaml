@@ -43,12 +43,12 @@ jobs:
 
           case default in
           default)
-              source_archive_url="https://nodejs.org/dist/v21.1.0/node-v21.1.0.tar.xz"
+              source_archive_url="https://nodejs.org/dist/v${{ github.event.inputs.node_version }}/node-v${{ github.event.inputs.node_version }}.tar.xz"
               echo "source_archive_url:${source_archive_url}"
               curl -Lks "${source_archive_url}" | xz -d | tar -x
               ;;
           github)
-              source_archive_url="https://github.com/nodejs/node/archive/refs/tags/v21.1.0.tar.gz"
+              source_archive_url="https://github.com/nodejs/node/archive/refs/tags/v${{ github.event.inputs.node_version }}.tar.gz"
               echo "source_archive_url:${source_archive_url}"
               curl -Lks "${source_archive_url}" | gzip -d | tar -x
               ;;
