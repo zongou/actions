@@ -60,8 +60,8 @@ jobs:
         run: |
           # patch --strip=1 < ${GITHUB_WORKSPACE}/nodejs/${{ github.event.inputs.node_version }}.patch --no-backup-if-mismatch -t
 
-          # handler-outside.cc:(.text._ZN2v88internal12trap_handler17EnableTrapHandlerEb+0x35): undefined reference to `v8::internal::trap_handler::RegisterDefaultTrapHandler()'
-          patch -f ./deps/v8/src/trap-handler/trap-handler.h < ./android-patches/trap-handler.h.patch --no-backup-if-mismatch -t
+          # Try to patch trap-handler.h
+          patch -f ./deps/v8/src/trap-handler/trap-handler.h < ./android-patches/trap-handler.h.patch --no-backup-if-mismatch -t || true
 
           # g++: error: unrecognized command line option ‘-msign-return-address=all’
           sed -i "s|o\['cflags'\]+=\['-msign-return-address=all'\]|warn('-msign-return-address=all no longer exists!')|" configure.py
