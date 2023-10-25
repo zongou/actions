@@ -1,4 +1,5 @@
-name: Build LLVM Toolchain ${{ github.event.inputs.llvm_version }}
+name: Build LLVM Toolchain
+run-name: Build LLVM Toolchain ${{ github.event.inputs.llvm_version }}
 on:
   workflow_dispatch:
     inputs:
