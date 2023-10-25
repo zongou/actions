@@ -43,9 +43,8 @@ jobs:
 
           case default in
           default)
-              source_archive_url="https://nodejs.org/dist/v${{ github.event.inputs.node_version }}/node-v${{ github.event.inputs.node_version }}.tar.xz"
-              echo "source_archive_url:${source_archive_url}"
-              curl -Lks "${source_archive_url}" | xz -d | tar -x
+              git clone --depth=1 https://github.com/nodejs/node -b v${{ github.event.inputs.node_version }}
+              mv node node-v${{ github.event.inputs.node_version }}
               ;;
           github)
               source_archive_url="https://github.com/nodejs/node/archive/refs/tags/v${{ github.event.inputs.node_version }}.tar.gz"
