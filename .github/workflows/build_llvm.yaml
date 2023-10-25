@@ -36,7 +36,7 @@ jobs:
           cat /proc/cpuinfo
           tree -L 2 ${GITHUB_WORKSPACE}
 
-      - name: Get source code
+      - name: Get source
         run: |
           git clone --depth 1 https://github.com/llvm/llvm-project.git -b llvmorg-${{ github.event.inputs.llvm_version }}
 
@@ -44,6 +44,7 @@ jobs:
         working-directory: llvm-project
         run: |
           sudo apt install ninja-build
+          
           LLVM_TARGETS_TO_BUILD=AArch64
           TARGET_TRIPLE=aarch64-linux-android24
 
@@ -55,12 +56,15 @@ jobs:
               -DCMAKE_BUILD_TYPE=Release \
               -DLLVM_TARGETS_TO_BUILD="$LLVM_TARGETS_TO_BUILD;WebAssembly"
 
+      - name: Build
+        working-directory: llvm-project
+        run: |
           ninja -C build check-llvm
-          
+
       - uses: actions/upload-artifact@main
         with:
-          name: github_actions_upload_artifact_gzip
-          path: echo_hello.tar.gz
+          name: llvm
+          path: llvm-project/build
 
       - name: Delete workflow runs
         uses: Mattraks/delete-workflow-runs@v2.0.4
