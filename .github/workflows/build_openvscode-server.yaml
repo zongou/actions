@@ -21,14 +21,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@main
-      - name: Print env
-        shell: bash {0}
-        # env:
-        # PACKAGE_VARIANT: ${{ matrix.target_arch }}
+      - name: Setup Build enviroment
         run: |
           sudo apt-get install build-essential g++ libx11-dev libxkbfile-dev libsecret-1-dev libkrb5-dev python-is-python3
           yarn global add node-gyp
-          
+
+      - name: Setup source code
+        run: |
           git clone https://github.com/gitpod-io/openvscode-server --depth=1
         
       - name: Build
