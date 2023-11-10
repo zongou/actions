@@ -26,6 +26,7 @@ jobs:
         # env:
         # PACKAGE_VARIANT: ${{ matrix.target_arch }}
         run: |
+          sudo apt-get install build-essential g++ libx11-dev libxkbfile-dev libsecret-1-dev libkrb5-dev python-is-python3
           git clone https://github.com/gitpod-io/openvscode-server --depth=1
         
       - name: Build
