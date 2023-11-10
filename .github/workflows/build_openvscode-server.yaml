@@ -1,23 +1,23 @@
-name: Test Action
+name: Build openvscode-server
 on:
   workflow_dispatch:
-    inputs:
-      target_arch:
-        description: "target arch:"
-        default: arm64
-        required: true
+    # inputs:
+    #   target_arch:
+    #     description: "target arch:"
+    #     default: arm64
+    #     required: true
 
 jobs:
   build-android:
     runs-on: ubuntu-latest
-    env:
-      arch: ${{ github.event.inputs.target_arch }}
-    strategy:
-      fail-fast: false
-      matrix:
-        node_version: [18.17.1]
-        android_sdk_version: [24]
-        target_arch: [arm64]
+    # env:
+    #   arch: ${{ github.event.inputs.target_arch }}
+    # strategy:
+    #   fail-fast: false
+    #   matrix:
+    #     node_version: [18.17.1]
+    #     android_sdk_version: [24]
+    #     target_arch: [arm64]
 
     steps:
       - uses: actions/checkout@main
@@ -26,16 +26,12 @@ jobs:
         # env:
         # PACKAGE_VARIANT: ${{ matrix.target_arch }}
         run: |
-          ls ${GITHUB_WORKSPACE}
-          env
-          cat /proc/cpuinfo
-          tree -L 2 ${GITHUB_WORKSPACE}
-
-      - name: Create files
+          git clone https://github.com/gitpod-io/openvscode-server --depth=1
+        
+      - name: Build
+        working-directory: openvscode-server
         run: |
-          echo "echo hello world" > echo_hello
-          chmod +x echo_hello
-          tar -c echo_hello | gzip > echo_hello.tar.gz
+          yarn
 
       - uses: actions/upload-artifact@main
         with:

@@ -1,0 +1,64 @@
+name: Workflow Template
+on:
+  workflow_dispatch:
+    inputs:
+      target_arch:
+        description: "target arch:"
+        default: arm64
+        required: true
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    env:
+      arch: ${{ github.event.inputs.target_arch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node_version: [18.17.1]
+        android_sdk_version: [24]
+        target_arch: [arm64]
+
+    steps:
+      - uses: actions/checkout@main
+      - name: Print env
+        shell: bash {0}
+        # env:
+        # PACKAGE_VARIANT: ${{ matrix.target_arch }}
+        run: |
+          ls ${GITHUB_WORKSPACE}
+          env
+          cat /proc/cpuinfo
+          tree -L 2 ${GITHUB_WORKSPACE}
+
+      - name: Create files
+        run: |
+          echo "echo hello world" > echo_hello
+          chmod +x echo_hello
+          tar -c echo_hello | gzip > echo_hello.tar.gz
+
+      - uses: actions/upload-artifact@main
+        with:
+          name: github_actions_upload_artifact_raw
+          path: echo_hello
+
+      - uses: actions/upload-artifact@main
+        with:
+          name: github_actions_upload_artifact_gzip
+          path: echo_hello.tar.gz
+
+      - name: Delete workflow runs
+        uses: Mattraks/delete-workflow-runs@v2.0.4
+        with:
+          retain_days: 0
+          keep_minimum_runs: 1
+
+      - name: Upload to Release Action
+        uses: Shopify/upload-to-release@v1.0.1
+        with:
+          # Artifact name
+          name: debian-rootfs-${{ github.event.inputs.dist_version }}-${{ github.event.inputs.target_arch }}
+          # Path to the file to upload
+          path: debian-rootfs-${{ github.event.inputs.dist_version }}-${{ github.event.inputs.target_arch }}.tar.gz
+          # secrets.GITHUB_TOKEN
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
