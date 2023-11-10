@@ -23,6 +23,7 @@ jobs:
       - uses: actions/checkout@main
       - name: Setup Build enviroment
         run: |
+          node -v
           sudo apt-get install build-essential g++ libx11-dev libxkbfile-dev libsecret-1-dev libkrb5-dev python-is-python3
           yarn global add node-gyp
 
