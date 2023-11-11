@@ -1,4 +1,4 @@
-name: Build openvscode-server
+name: Build vscode server
 on:
   workflow_dispatch:
     inputs:
