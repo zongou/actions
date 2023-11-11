@@ -38,7 +38,15 @@ jobs:
         working-directory: vscode
         run: |
           yarn
-          yarn gulp
+
+          ## Server
+          yarn gulp compile
+          yarn gulp node
+
+          ## Web
+          yarn gulp compile
+          yarn gulp compile-web
+          # ./script/code-server.sh
 
       - uses: actions/upload-artifact@main
         with:
