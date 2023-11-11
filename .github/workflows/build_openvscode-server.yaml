@@ -1,11 +1,11 @@
 name: Build openvscode-server
 on:
   workflow_dispatch:
-    # inputs:
-    #   target_arch:
-    #     description: "target arch:"
-    #     default: arm64
-    #     required: true
+    inputs:
+      commit:
+        description: "git commit:"
+        default: 1a5daa3a0231a0fbba4f14db7ec463cf99d7768e
+        required: true
 
 jobs:
   build-android:
@@ -21,21 +21,24 @@ jobs:
 
     steps:
       - uses: actions/checkout@main
-      - name: Setup Build enviroment
+      - name: Install build dependencies
         run: |
           node -v
           sudo apt update
           sudo apt install build-essential g++ libx11-dev libxkbfile-dev libsecret-1-dev libkrb5-dev python-is-python3
           yarn global add node-gyp
 
-      - name: Setup source code
+      - name: Fetch source code
         run: |
-          git clone https://github.com/gitpod-io/openvscode-server --depth=1
-        
+          # git clone https://github.com/gitpod-io/openvscode-server --depth=1
+          curl -Lk https://github.com/microsoft/vscode/archive/${{ github.event.inputs.commit }}.tar.gz | gzip -d | tar -xv
+          mv vscode-${{ github.event.inputs.commit }} vscode
+
       - name: Build
-        working-directory: openvscode-server
+        working-directory: vscode
         run: |
           yarn
+          yarn gulp
 
       - uses: actions/upload-artifact@main
         with:
