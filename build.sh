@@ -1,8 +1,14 @@
 #!/bin/sh
 set -eu
 
+
 ## Go to source dir
 cd "$(dirname $0)/vscode"
+
+## Get Node (for in China)
+# mkdir -p .build/node/v18.15.0/linux-x64/
+# curl -Lk https://mirrors.aliyun.com/nodejs-release/v18.15.0/node-v18.15.0-linux-x64.tar.xz | xz -d | tar -x node-v18.15.0-linux-x64/bin/node -O > .build/node/v18.15.0/linux-x64/node
+# chmod +x .build/node/v18.15.0/linux-x64/node
 
 ## Install dependencies ====
 # # Electron and browsers are not required
