@@ -46,7 +46,7 @@ jobs:
       - name: Test output
         run: |
           tree -L 1
-          find vscode-reh-web-linux-x64 -name "workbench.web.main.js" -exec head -n3 {} \;
+          find "vscode-*" -name "workbench.web.main.js" -exec head -n3 {} \;
 
       - name: Package
         run: |
