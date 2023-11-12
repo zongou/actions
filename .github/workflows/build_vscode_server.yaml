@@ -12,12 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     # env:
     #   arch: ${{ github.event.inputs.target_arch }}
-    # strategy:
-    #   fail-fast: false
-    #   matrix:
-    #     node_version: [18.17.1]
-    #     android_sdk_version: [24]
-    #     target_arch: [arm64]
+    strategy:
+      fail-fast: false
+      matrix:
+        tasks: [vscode-reh-linux-x64-min,vscode-reh-linux-arm64-min]
 
     steps:
       - uses: actions/checkout@main
@@ -38,15 +36,8 @@ jobs:
         working-directory: vscode
         run: |
           yarn
-
-          ## Server
-          yarn gulp compile
-          yarn gulp node
-
-          ## Web
-          yarn gulp compile
-          yarn gulp compile-web
-          # ./script/code-server.sh
+          yarn gulp ${{ matrix.tasks }}
+          yarn gulp 
 
       - uses: actions/upload-artifact@main
         with:
