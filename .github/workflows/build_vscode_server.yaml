@@ -10,8 +10,6 @@ on:
 jobs:
   build-android:
     runs-on: ubuntu-latest
-    # env:
-    #   arch: ${{ github.event.inputs.target_arch }}
     strategy:
       fail-fast: false
       matrix:
@@ -35,9 +33,14 @@ jobs:
       - name: Build
         working-directory: vscode
         run: |
+          ## Install dependencies ====
+          ## Electron and browsers are not required
+          ## for code-server build.
+          export ELECTRON_SKIP_BINARY_DOWNLOAD=1
+          export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+
           yarn
           yarn gulp ${{ matrix.tasks }}
-          yarn gulp 
 
       - uses: actions/upload-artifact@main
         with:
