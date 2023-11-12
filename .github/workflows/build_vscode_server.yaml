@@ -54,7 +54,8 @@ jobs:
             tar -c "${dir}" | xz -T0 > "${dir}".tar.xz
           done
 
-      - uses: actions/upload-artifact@main
+      - name: Upload output
+        uses: actions/upload-artifact@main
         with:
           name: ${{ matrix.tasks }}
           path: vscode-*
