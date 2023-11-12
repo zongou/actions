@@ -13,18 +13,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tasks: [vscode-reh-linux-x64-min,vscode-reh-linux-arm64-min]
+        tasks: [vscode-reh-linux-x64-min, vscode-reh-linux-arm64-min]
 
     steps:
       - uses: actions/checkout@main
-      - name: Install build dependencies
+      - name: Install dependencies
         run: |
           node -v
           sudo apt update
           sudo apt install build-essential g++ libx11-dev libxkbfile-dev libsecret-1-dev libkrb5-dev python-is-python3
           yarn global add node-gyp
 
-      - name: Fetch source code
+      - name: Fetch source code and patch
         run: |
           git clone https://github.com/microsoft/vscode
           cd vscode
@@ -42,15 +42,21 @@ jobs:
           yarn
           yarn gulp ${{ matrix.tasks }}
 
-      - uses: actions/upload-artifact@main
-        with:
-          name: github_actions_upload_artifact_raw
-          path: echo_hello
+      - name: Test output
+        run: |
+          tree -L 1
+          find vscode-reh-web-linux-x64 -name "workbench.web.main.js" -exec head -n3 {} \;
+
+      - name: Package
+        run: |
+          find -maxdepth 1 -name "vscode-*" -type d | while IFS= read -r dir; do
+            tar -c "${dir}" | xz -T0 > "${dir}".tar.xz
+          done
 
       - uses: actions/upload-artifact@main
         with:
-          name: github_actions_upload_artifact_gzip
-          path: echo_hello.tar.gz
+          name: ${{ matrix.tasks }}
+          path: vscode-*
 
       - name: Delete workflow runs
         uses: Mattraks/delete-workflow-runs@v2.0.4
