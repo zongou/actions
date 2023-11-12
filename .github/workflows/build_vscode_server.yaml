@@ -58,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@main
         with:
           name: ${{ matrix.tasks }}
-          path: vscode-*
+          path: vscode-*.tar.xz
 
       - name: Upload to Release Action
         uses: Shopify/upload-to-release@v1.0.1
