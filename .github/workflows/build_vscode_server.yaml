@@ -28,9 +28,9 @@ jobs:
 
       - name: Fetch source code
         run: |
-          # git clone https://github.com/gitpod-io/openvscode-server --depth=1
-          curl -Lk https://github.com/microsoft/vscode/archive/${{ github.event.inputs.commit }}.tar.gz | gzip -d | tar -xv
-          mv vscode-${{ github.event.inputs.commit }} vscode
+          git clone https://github.com/microsoft/vscode
+          cd vscode
+          git checkout ${{ github.event.input.commit }}
 
       - name: Build
         working-directory: vscode
