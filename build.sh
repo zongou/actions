@@ -1,14 +1,8 @@
 #!/bin/sh
 set -eu
 
-
 ## Go to source dir
 cd "$(dirname $0)/vscode"
-
-## Get Node (for in China)
-# mkdir -p .build/node/v18.15.0/linux-x64/
-# curl -Lk https://mirrors.aliyun.com/nodejs-release/v18.15.0/node-v18.15.0-linux-x64.tar.xz | xz -d | tar -x node-v18.15.0-linux-x64/bin/node -O > .build/node/v18.15.0/linux-x64/node
-# chmod +x .build/node/v18.15.0/linux-x64/node
 
 ## Install dependencies ====
 # # Electron and browsers are not required
@@ -39,6 +33,11 @@ export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 
 yarn
 
+## Get Node (for in China)
+# mkdir -p .build/node/v18.15.0/linux-x64/
+# curl -Lk https://mirrors.aliyun.com/nodejs-release/v18.15.0/node-v18.15.0-linux-x64.tar.xz | xz -d | tar -x node-v18.15.0-linux-x64/bin/node -O > .build/node/v18.15.0/linux-x64/node
+# chmod +x .build/node/v18.15.0/linux-x64/node
+
 ## Patch ====
 # Prevent electron build
 # cat build/lib/preLaunch.js |
@@ -64,307 +63,306 @@ yarn gulp vscode-reh-web-linux-x64-min
 # mv /vscode/product.json ./
 # mv /vscode/package.json ./
 
-# [19:17:24] Tasks for /workspaces/build-workflow/repos/vscode/gulpfile.js
-# [19:17:24] ├── extract-editor-src
-# [19:17:24] ├── editor-distro
-# [19:17:24] ├── editor-esm-bundle
-# [19:17:24] ├── monacodts
-# [19:17:24] ├── transpile-extension:authentication-proxy
-# [19:17:24] ├── compile-extension:authentication-proxy
-# [19:17:24] ├── watch-extension:authentication-proxy
-# [19:17:24] ├── transpile-extension:configuration-editing-build
-# [19:17:24] ├── compile-extension:configuration-editing-build
-# [19:17:24] ├── watch-extension:configuration-editing-build
-# [19:17:24] ├── transpile-extension:configuration-editing
-# [19:17:24] ├── compile-extension:configuration-editing
-# [19:17:24] ├── watch-extension:configuration-editing
-# [19:17:24] ├── transpile-extension:css-language-features-client
-# [19:17:24] ├── compile-extension:css-language-features-client
-# [19:17:24] ├── watch-extension:css-language-features-client
-# [19:17:24] ├── transpile-extension:css-language-features-server
-# [19:17:24] ├── compile-extension:css-language-features-server
-# [19:17:24] ├── watch-extension:css-language-features-server
-# [19:17:24] ├── transpile-extension:debug-auto-launch
-# [19:17:24] ├── compile-extension:debug-auto-launch
-# [19:17:24] ├── watch-extension:debug-auto-launch
-# [19:17:24] ├── transpile-extension:debug-server-ready
-# [19:17:24] ├── compile-extension:debug-server-ready
-# [19:17:24] ├── watch-extension:debug-server-ready
-# [19:17:24] ├── transpile-extension:emmet
-# [19:17:24] ├── compile-extension:emmet
-# [19:17:24] ├── watch-extension:emmet
-# [19:17:24] ├── transpile-extension:extension-editing
-# [19:17:24] ├── compile-extension:extension-editing
-# [19:17:24] ├── watch-extension:extension-editing
-# [19:17:24] ├── transpile-extension:git
-# [19:17:24] ├── compile-extension:git
-# [19:17:24] ├── watch-extension:git
-# [19:17:24] ├── transpile-extension:git-base
-# [19:17:24] ├── compile-extension:git-base
-# [19:17:24] ├── watch-extension:git-base
-# [19:17:24] ├── transpile-extension:github-authentication
-# [19:17:24] ├── compile-extension:github-authentication
-# [19:17:24] ├── watch-extension:github-authentication
-# [19:17:24] ├── transpile-extension:github
-# [19:17:24] ├── compile-extension:github
-# [19:17:24] ├── watch-extension:github
-# [19:17:24] ├── transpile-extension:grunt
-# [19:17:24] ├── compile-extension:grunt
-# [19:17:24] ├── watch-extension:grunt
-# [19:17:24] ├── transpile-extension:gulp
-# [19:17:24] ├── compile-extension:gulp
-# [19:17:24] ├── watch-extension:gulp
-# [19:17:24] ├── transpile-extension:html-language-features-client
-# [19:17:24] ├── compile-extension:html-language-features-client
-# [19:17:24] ├── watch-extension:html-language-features-client
-# [19:17:24] ├── transpile-extension:html-language-features-server
-# [19:17:24] ├── compile-extension:html-language-features-server
-# [19:17:24] ├── watch-extension:html-language-features-server
-# [19:17:24] ├── transpile-extension:ipynb
-# [19:17:24] ├── compile-extension:ipynb
-# [19:17:24] ├── watch-extension:ipynb
-# [19:17:24] ├── transpile-extension:jake
-# [19:17:24] ├── compile-extension:jake
-# [19:17:24] ├── watch-extension:jake
-# [19:17:24] ├── transpile-extension:json-language-features-client
-# [19:17:24] ├── compile-extension:json-language-features-client
-# [19:17:24] ├── watch-extension:json-language-features-client
-# [19:17:24] ├── transpile-extension:json-language-features-server
-# [19:17:24] ├── compile-extension:json-language-features-server
-# [19:17:24] ├── watch-extension:json-language-features-server
-# [19:17:24] ├── transpile-extension:markdown-language-features-preview-src
-# [19:17:24] ├── compile-extension:markdown-language-features-preview-src
-# [19:17:24] ├── watch-extension:markdown-language-features-preview-src
-# [19:17:24] ├── transpile-extension:markdown-language-features-server
-# [19:17:24] ├── compile-extension:markdown-language-features-server
-# [19:17:24] ├── watch-extension:markdown-language-features-server
-# [19:17:24] ├── transpile-extension:markdown-language-features
-# [19:17:24] ├── compile-extension:markdown-language-features
-# [19:17:24] ├── watch-extension:markdown-language-features
-# [19:17:24] ├── transpile-extension:markdown-math
-# [19:17:24] ├── compile-extension:markdown-math
-# [19:17:24] ├── watch-extension:markdown-math
-# [19:17:24] ├── transpile-extension:media-preview
-# [19:17:24] ├── compile-extension:media-preview
-# [19:17:24] ├── watch-extension:media-preview
-# [19:17:24] ├── transpile-extension:merge-conflict
-# [19:17:24] ├── compile-extension:merge-conflict
-# [19:17:24] ├── watch-extension:merge-conflict
-# [19:17:24] ├── transpile-extension:microsoft-authentication
-# [19:17:24] ├── compile-extension:microsoft-authentication
-# [19:17:24] ├── watch-extension:microsoft-authentication
-# [19:17:24] ├── transpile-extension:notebook-renderers
-# [19:17:24] ├── compile-extension:notebook-renderers
-# [19:17:24] ├── watch-extension:notebook-renderers
-# [19:17:24] ├── transpile-extension:npm
-# [19:17:24] ├── compile-extension:npm
-# [19:17:24] ├── watch-extension:npm
-# [19:17:24] ├── transpile-extension:php-language-features
-# [19:17:24] ├── compile-extension:php-language-features
-# [19:17:24] ├── watch-extension:php-language-features
-# [19:17:24] ├── transpile-extension:search-result
-# [19:17:24] ├── compile-extension:search-result
-# [19:17:24] ├── watch-extension:search-result
-# [19:17:24] ├── transpile-extension:references-view
-# [19:17:24] ├── compile-extension:references-view
-# [19:17:24] ├── watch-extension:references-view
-# [19:17:24] ├── transpile-extension:simple-browser
-# [19:17:24] ├── compile-extension:simple-browser
-# [19:17:24] ├── watch-extension:simple-browser
-# [19:17:24] ├── transpile-extension:tunnel-forwarding
-# [19:17:24] ├── compile-extension:tunnel-forwarding
-# [19:17:24] ├── watch-extension:tunnel-forwarding
-# [19:17:24] ├── transpile-extension:typescript-language-features-test-workspace
-# [19:17:24] ├── compile-extension:typescript-language-features-test-workspace
-# [19:17:24] ├── watch-extension:typescript-language-features-test-workspace
-# [19:17:24] ├── transpile-extension:typescript-language-features-web
-# [19:17:24] ├── compile-extension:typescript-language-features-web
-# [19:17:24] ├── watch-extension:typescript-language-features-web
-# [19:17:24] ├── transpile-extension:typescript-language-features
-# [19:17:24] ├── compile-extension:typescript-language-features
-# [19:17:24] ├── watch-extension:typescript-language-features
-# [19:17:24] ├── transpile-extension:vscode-api-tests
-# [19:17:24] ├── compile-extension:vscode-api-tests
-# [19:17:24] ├── watch-extension:vscode-api-tests
-# [19:17:24] ├── transpile-extension:vscode-colorize-tests
-# [19:17:24] ├── compile-extension:vscode-colorize-tests
-# [19:17:24] ├── watch-extension:vscode-colorize-tests
-# [19:17:24] ├── transpile-extension:vscode-test-resolver
-# [19:17:24] ├── compile-extension:vscode-test-resolver
-# [19:17:24] ├── watch-extension:vscode-test-resolver
-# [19:17:24] ├── transpile-extensions
-# [19:17:24] ├── compile-extensions
-# [19:17:24] ├── watch-extensions
-# [19:17:24] ├── compile-extensions-build-legacy
-# [19:17:24] ├── compile-extension-media
-# [19:17:24] ├── watch-extension-media
-# [19:17:24] ├── compile-extension-media-build
-# [19:17:24] ├── compile-extensions-build
-# [19:17:24] ├── extensions-ci
-# [19:17:24] ├── compile-extensions-build-pr
-# [19:17:24] ├── extensions-ci-pr
-# [19:17:24] ├── compile-web
-# [19:17:24] ├── watch-web
-# [19:17:24] ├── compile-api-proposal-names
-# [19:17:24] ├── watch-api-proposal-names
-# [19:17:24] ├── transpile-client-swc
-# [19:17:24] ├── transpile-client
-# [19:17:24] ├── compile-client
-# [19:17:24] ├── watch-client
-# [19:17:24] ├── compile
-# [19:17:24] ├── watch
-# [19:17:24] ├── default
-# [19:17:24] ├── compile-cli
-# [19:17:24] ├── watch-cli
-# [19:17:24] ├── compile-build
-# [19:17:24] ├── compile-build-pr
-# [19:17:24] ├── check-package-json
-# [19:17:24] ├── hygiene
-# [19:17:24] ├── minify-vscode-web
-# [19:17:24] ├── compile-web-extensions-build
-# [19:17:24] ├── vscode-web-ci
-# [19:17:24] ├── vscode-web
-# [19:17:24] ├── vscode-web-min-ci
-# [19:17:24] ├── vscode-web-min
-# [19:17:24] ├── node-win32-x64
-# [19:17:24] ├── node-darwin-x64
-# [19:17:24] ├── node-darwin-arm64
-# [19:17:24] ├── node-linux-x64
-# [19:17:24] ├── node-linux-armhf
-# [19:17:24] ├── node-linux-arm64
-# [19:17:24] ├── node-alpine-arm64
-# [19:17:24] ├── node-linux-alpine
-# [19:17:24] ├── node
-# [19:17:24] ├── minify-vscode-reh
-# [19:17:24] ├── vscode-reh-win32-x64-ci
-# [19:17:24] ├── vscode-reh-win32-x64
-# [19:17:24] ├── vscode-reh-win32-x64-min-ci
-# [19:17:24] ├── vscode-reh-win32-x64-min
-# [19:17:24] ├── vscode-reh-darwin-x64-ci
-# [19:17:24] ├── vscode-reh-darwin-x64
-# [19:17:24] ├── vscode-reh-darwin-x64-min-ci
-# [19:17:24] ├── vscode-reh-darwin-x64-min
-# [19:17:24] ├── vscode-reh-darwin-arm64-ci
-# [19:17:24] ├── vscode-reh-darwin-arm64
-# [19:17:24] ├── vscode-reh-darwin-arm64-min-ci
-# [19:17:24] ├── vscode-reh-darwin-arm64-min
-# [19:17:24] ├── vscode-reh-linux-x64-ci
-# [19:17:24] ├── vscode-reh-linux-x64
-# [19:17:24] ├── vscode-reh-linux-x64-min-ci
-# [19:17:24] ├── vscode-reh-linux-x64-min
-# [19:17:24] ├── vscode-reh-linux-armhf-ci
-# [19:17:24] ├── vscode-reh-linux-armhf
-# [19:17:24] ├── vscode-reh-linux-armhf-min-ci
-# [19:17:24] ├── vscode-reh-linux-armhf-min
-# [19:17:24] ├── vscode-reh-linux-arm64-ci
-# [19:17:24] ├── vscode-reh-linux-arm64
-# [19:17:24] ├── vscode-reh-linux-arm64-min-ci
-# [19:17:24] ├── vscode-reh-linux-arm64-min
-# [19:17:24] ├── vscode-reh-alpine-arm64-ci
-# [19:17:24] ├── vscode-reh-alpine-arm64
-# [19:17:24] ├── vscode-reh-alpine-arm64-min-ci
-# [19:17:24] ├── vscode-reh-alpine-arm64-min
-# [19:17:24] ├── vscode-reh-linux-alpine-ci
-# [19:17:24] ├── vscode-reh-linux-alpine
-# [19:17:24] ├── vscode-reh-linux-alpine-min-ci
-# [19:17:24] ├── vscode-reh-linux-alpine-min
-# [19:17:24] ├── minify-vscode-reh-web
-# [19:17:24] ├── vscode-reh-web-win32-x64-ci
-# [19:17:24] ├── vscode-reh-web-win32-x64
-# [19:17:24] ├── vscode-reh-web-win32-x64-min-ci
-# [19:17:24] ├── vscode-reh-web-win32-x64-min
-# [19:17:24] ├── vscode-reh-web-darwin-x64-ci
-# [19:17:24] ├── vscode-reh-web-darwin-x64
-# [19:17:24] ├── vscode-reh-web-darwin-x64-min-ci
-# [19:17:24] ├── vscode-reh-web-darwin-x64-min
-# [19:17:24] ├── vscode-reh-web-darwin-arm64-ci
-# [19:17:24] ├── vscode-reh-web-darwin-arm64
-# [19:17:24] ├── vscode-reh-web-darwin-arm64-min-ci
-# [19:17:24] ├── vscode-reh-web-darwin-arm64-min
-# [19:17:24] ├── vscode-reh-web-linux-x64-ci
-# [19:17:24] ├── vscode-reh-web-linux-x64
-# [19:17:24] ├── vscode-reh-web-linux-x64-min-ci
-# [19:17:24] ├── vscode-reh-web-linux-x64-min
-# [19:17:24] ├── vscode-reh-web-linux-armhf-ci
-# [19:17:24] ├── vscode-reh-web-linux-armhf
-# [19:17:24] ├── vscode-reh-web-linux-armhf-min-ci
-# [19:17:24] ├── vscode-reh-web-linux-armhf-min
-# [19:17:24] ├── vscode-reh-web-linux-arm64-ci
-# [19:17:24] ├── vscode-reh-web-linux-arm64
-# [19:17:24] ├── vscode-reh-web-linux-arm64-min-ci
-# [19:17:24] ├── vscode-reh-web-linux-arm64-min
-# [19:17:24] ├── vscode-reh-web-alpine-arm64-ci
-# [19:17:24] ├── vscode-reh-web-alpine-arm64
-# [19:17:24] ├── vscode-reh-web-alpine-arm64-min-ci
-# [19:17:24] ├── vscode-reh-web-alpine-arm64-min
-# [19:17:24] ├── vscode-reh-web-linux-alpine-ci
-# [19:17:24] ├── vscode-reh-web-linux-alpine
-# [19:17:24] ├── vscode-reh-web-linux-alpine-min-ci
-# [19:17:24] ├── vscode-reh-web-linux-alpine-min
-# [19:17:24] ├── vscode-symbols-win32-x64
-# [19:17:24] ├── vscode-symbols-win32-arm64
-# [19:17:24] ├── vscode-symbols-darwin
-# [19:17:24] ├── vscode-symbols-linux-x64
-# [19:17:24] ├── vscode-symbols-linux-armhf
-# [19:17:24] ├── vscode-symbols-linux-arm64
-# [19:17:24] ├── optimize-vscode
-# [19:17:24] ├── minify-vscode
-# [19:17:24] ├── core-ci
-# [19:17:24] ├── core-ci-pr
-# [19:17:24] ├── vscode-win32-x64-ci
-# [19:17:24] ├── vscode-win32-x64
-# [19:17:24] ├── vscode-win32-x64-min-ci
-# [19:17:24] ├── vscode-win32-x64-min
-# [19:17:24] ├── vscode-win32-arm64-ci
-# [19:17:24] ├── vscode-win32-arm64
-# [19:17:24] ├── vscode-win32-arm64-min-ci
-# [19:17:24] ├── vscode-win32-arm64-min
-# [19:17:24] ├── vscode-darwin-x64-ci
-# [19:17:24] ├── vscode-darwin-x64
-# [19:17:24] ├── vscode-darwin-x64-min-ci
-# [19:17:24] ├── vscode-darwin-x64-min
-# [19:17:24] ├── vscode-darwin-arm64-ci
-# [19:17:24] ├── vscode-darwin-arm64
-# [19:17:24] ├── vscode-darwin-arm64-min-ci
-# [19:17:24] ├── vscode-darwin-arm64-min
-# [19:17:24] ├── vscode-linux-x64-ci
-# [19:17:24] ├── vscode-linux-x64
-# [19:17:24] ├── vscode-linux-x64-min-ci
-# [19:17:24] ├── vscode-linux-x64-min
-# [19:17:24] ├── vscode
-# [19:17:24] ├── vscode-min
-# [19:17:24] ├── vscode-linux-armhf-ci
-# [19:17:24] ├── vscode-linux-armhf
-# [19:17:24] ├── vscode-linux-armhf-min-ci
-# [19:17:24] ├── vscode-linux-armhf-min
-# [19:17:24] ├── vscode-linux-arm64-ci
-# [19:17:24] ├── vscode-linux-arm64
-# [19:17:24] ├── vscode-linux-arm64-min-ci
-# [19:17:24] ├── vscode-linux-arm64-min
-# [19:17:24] ├── vscode-translations-export
-# [19:17:24] ├── vscode-translations-import
-# [19:17:24] ├── vscode-linux-x64-prepare-deb
-# [19:17:24] ├── vscode-linux-x64-build-deb
-# [19:17:24] ├── vscode-linux-x64-prepare-rpm
-# [19:17:24] ├── vscode-linux-x64-build-rpm
-# [19:17:24] ├── vscode-linux-x64-prepare-snap
-# [19:17:24] ├── vscode-linux-x64-build-snap
-# [19:17:24] ├── vscode-linux-armhf-prepare-deb
-# [19:17:24] ├── vscode-linux-armhf-build-deb
-# [19:17:24] ├── vscode-linux-armhf-prepare-rpm
-# [19:17:24] ├── vscode-linux-armhf-build-rpm
-# [19:17:24] ├── vscode-linux-armhf-prepare-snap
-# [19:17:24] ├── vscode-linux-armhf-build-snap
-# [19:17:24] ├── vscode-linux-arm64-prepare-deb
-# [19:17:24] ├── vscode-linux-arm64-build-deb
-# [19:17:24] ├── vscode-linux-arm64-prepare-rpm
-# [19:17:24] ├── vscode-linux-arm64-build-rpm
-# [19:17:24] ├── vscode-linux-arm64-prepare-snap
-# [19:17:24] ├── vscode-linux-arm64-build-snap
-# [19:17:24] ├── vscode-win32-x64-system-setup
-# [19:17:24] ├── vscode-win32-arm64-system-setup
-# [19:17:24] ├── vscode-win32-x64-user-setup
-# [19:17:24] ├── vscode-win32-arm64-user-setup
-# [19:17:24] ├── vscode-win32-x64-inno-updater
-# [19:17:24] └── vscode-win32-arm64-inno-updater
-# Done in 5.65s.
+## Tasks for /workspaces/build-workflow/repos/vscode/gulpfile.js
+## extract-editor-src
+## editor-distro
+## editor-esm-bundle
+## monacodts
+## transpile-extension:authentication-proxy
+## compile-extension:authentication-proxy
+## watch-extension:authentication-proxy
+## transpile-extension:configuration-editing-build
+## compile-extension:configuration-editing-build
+## watch-extension:configuration-editing-build
+## transpile-extension:configuration-editing
+## compile-extension:configuration-editing
+## watch-extension:configuration-editing
+## transpile-extension:css-language-features-client
+## compile-extension:css-language-features-client
+## watch-extension:css-language-features-client
+## transpile-extension:css-language-features-server
+## compile-extension:css-language-features-server
+## watch-extension:css-language-features-server
+## transpile-extension:debug-auto-launch
+## compile-extension:debug-auto-launch
+## watch-extension:debug-auto-launch
+## transpile-extension:debug-server-ready
+## compile-extension:debug-server-ready
+## watch-extension:debug-server-ready
+## transpile-extension:emmet
+## compile-extension:emmet
+## watch-extension:emmet
+## transpile-extension:extension-editing
+## compile-extension:extension-editing
+## watch-extension:extension-editing
+## transpile-extension:git
+## compile-extension:git
+## watch-extension:git
+## transpile-extension:git-base
+## compile-extension:git-base
+## watch-extension:git-base
+## transpile-extension:github-authentication
+## compile-extension:github-authentication
+## watch-extension:github-authentication
+## transpile-extension:github
+## compile-extension:github
+## watch-extension:github
+## transpile-extension:grunt
+## compile-extension:grunt
+## watch-extension:grunt
+## transpile-extension:gulp
+## compile-extension:gulp
+## watch-extension:gulp
+## transpile-extension:html-language-features-client
+## compile-extension:html-language-features-client
+## watch-extension:html-language-features-client
+## transpile-extension:html-language-features-server
+## compile-extension:html-language-features-server
+## watch-extension:html-language-features-server
+## transpile-extension:ipynb
+## compile-extension:ipynb
+## watch-extension:ipynb
+## transpile-extension:jake
+## compile-extension:jake
+## watch-extension:jake
+## transpile-extension:json-language-features-client
+## compile-extension:json-language-features-client
+## watch-extension:json-language-features-client
+## transpile-extension:json-language-features-server
+## compile-extension:json-language-features-server
+## watch-extension:json-language-features-server
+## transpile-extension:markdown-language-features-preview-src
+## compile-extension:markdown-language-features-preview-src
+## watch-extension:markdown-language-features-preview-src
+## transpile-extension:markdown-language-features-server
+## compile-extension:markdown-language-features-server
+## watch-extension:markdown-language-features-server
+## transpile-extension:markdown-language-features
+## compile-extension:markdown-language-features
+## watch-extension:markdown-language-features
+## transpile-extension:markdown-math
+## compile-extension:markdown-math
+## watch-extension:markdown-math
+## transpile-extension:media-preview
+## compile-extension:media-preview
+## watch-extension:media-preview
+## transpile-extension:merge-conflict
+## compile-extension:merge-conflict
+## watch-extension:merge-conflict
+## transpile-extension:microsoft-authentication
+## compile-extension:microsoft-authentication
+## watch-extension:microsoft-authentication
+## transpile-extension:notebook-renderers
+## compile-extension:notebook-renderers
+## watch-extension:notebook-renderers
+## transpile-extension:npm
+## compile-extension:npm
+## watch-extension:npm
+## transpile-extension:php-language-features
+## compile-extension:php-language-features
+## watch-extension:php-language-features
+## transpile-extension:search-result
+## compile-extension:search-result
+## watch-extension:search-result
+## transpile-extension:references-view
+## compile-extension:references-view
+## watch-extension:references-view
+## transpile-extension:simple-browser
+## compile-extension:simple-browser
+## watch-extension:simple-browser
+## transpile-extension:tunnel-forwarding
+## compile-extension:tunnel-forwarding
+## watch-extension:tunnel-forwarding
+## transpile-extension:typescript-language-features-test-workspace
+## compile-extension:typescript-language-features-test-workspace
+## watch-extension:typescript-language-features-test-workspace
+## transpile-extension:typescript-language-features-web
+## compile-extension:typescript-language-features-web
+## watch-extension:typescript-language-features-web
+## transpile-extension:typescript-language-features
+## compile-extension:typescript-language-features
+## watch-extension:typescript-language-features
+## transpile-extension:vscode-api-tests
+## compile-extension:vscode-api-tests
+## watch-extension:vscode-api-tests
+## transpile-extension:vscode-colorize-tests
+## compile-extension:vscode-colorize-tests
+## watch-extension:vscode-colorize-tests
+## transpile-extension:vscode-test-resolver
+## compile-extension:vscode-test-resolver
+## watch-extension:vscode-test-resolver
+## transpile-extensions
+## compile-extensions
+## watch-extensions
+## compile-extensions-build-legacy
+## compile-extension-media
+## watch-extension-media
+## compile-extension-media-build
+## compile-extensions-build
+## extensions-ci
+## compile-extensions-build-pr
+## extensions-ci-pr
+## compile-web
+## watch-web
+## compile-api-proposal-names
+## watch-api-proposal-names
+## transpile-client-swc
+## transpile-client
+## compile-client
+## watch-client
+## compile
+## watch
+## default
+## compile-cli
+## watch-cli
+## compile-build
+## compile-build-pr
+## check-package-json
+## hygiene
+## minify-vscode-web
+## compile-web-extensions-build
+## vscode-web-ci
+## vscode-web
+## vscode-web-min-ci
+## vscode-web-min
+## node-win32-x64
+## node-darwin-x64
+## node-darwin-arm64
+## node-linux-x64
+## node-linux-armhf
+## node-linux-arm64
+## node-alpine-arm64
+## node-linux-alpine
+## node
+## minify-vscode-reh
+## vscode-reh-win32-x64-ci
+## vscode-reh-win32-x64
+## vscode-reh-win32-x64-min-ci
+## vscode-reh-win32-x64-min
+## vscode-reh-darwin-x64-ci
+## vscode-reh-darwin-x64
+## vscode-reh-darwin-x64-min-ci
+## vscode-reh-darwin-x64-min
+## vscode-reh-darwin-arm64-ci
+## vscode-reh-darwin-arm64
+## vscode-reh-darwin-arm64-min-ci
+## vscode-reh-darwin-arm64-min
+## vscode-reh-linux-x64-ci
+## vscode-reh-linux-x64
+## vscode-reh-linux-x64-min-ci
+## vscode-reh-linux-x64-min
+## vscode-reh-linux-armhf-ci
+## vscode-reh-linux-armhf
+## vscode-reh-linux-armhf-min-ci
+## vscode-reh-linux-armhf-min
+## vscode-reh-linux-arm64-ci
+## vscode-reh-linux-arm64
+## vscode-reh-linux-arm64-min-ci
+## vscode-reh-linux-arm64-min
+## vscode-reh-alpine-arm64-ci
+## vscode-reh-alpine-arm64
+## vscode-reh-alpine-arm64-min-ci
+## vscode-reh-alpine-arm64-min
+## vscode-reh-linux-alpine-ci
+## vscode-reh-linux-alpine
+## vscode-reh-linux-alpine-min-ci
+## vscode-reh-linux-alpine-min
+## minify-vscode-reh-web
+## vscode-reh-web-win32-x64-ci
+## vscode-reh-web-win32-x64
+## vscode-reh-web-win32-x64-min-ci
+## vscode-reh-web-win32-x64-min
+## vscode-reh-web-darwin-x64-ci
+## vscode-reh-web-darwin-x64
+## vscode-reh-web-darwin-x64-min-ci
+## vscode-reh-web-darwin-x64-min
+## vscode-reh-web-darwin-arm64-ci
+## vscode-reh-web-darwin-arm64
+## vscode-reh-web-darwin-arm64-min-ci
+## vscode-reh-web-darwin-arm64-min
+## vscode-reh-web-linux-x64-ci
+## vscode-reh-web-linux-x64
+## vscode-reh-web-linux-x64-min-ci
+## vscode-reh-web-linux-x64-min
+## vscode-reh-web-linux-armhf-ci
+## vscode-reh-web-linux-armhf
+## vscode-reh-web-linux-armhf-min-ci
+## vscode-reh-web-linux-armhf-min
+## vscode-reh-web-linux-arm64-ci
+## vscode-reh-web-linux-arm64
+## vscode-reh-web-linux-arm64-min-ci
+## vscode-reh-web-linux-arm64-min
+## vscode-reh-web-alpine-arm64-ci
+## vscode-reh-web-alpine-arm64
+## vscode-reh-web-alpine-arm64-min-ci
+## vscode-reh-web-alpine-arm64-min
+## vscode-reh-web-linux-alpine-ci
+## vscode-reh-web-linux-alpine
+## vscode-reh-web-linux-alpine-min-ci
+## vscode-reh-web-linux-alpine-min
+## vscode-symbols-win32-x64
+## vscode-symbols-win32-arm64
+## vscode-symbols-darwin
+## vscode-symbols-linux-x64
+## vscode-symbols-linux-armhf
+## vscode-symbols-linux-arm64
+## optimize-vscode
+## minify-vscode
+## core-ci
+## core-ci-pr
+## vscode-win32-x64-ci
+## vscode-win32-x64
+## vscode-win32-x64-min-ci
+## vscode-win32-x64-min
+## vscode-win32-arm64-ci
+## vscode-win32-arm64
+## vscode-win32-arm64-min-ci
+## vscode-win32-arm64-min
+## vscode-darwin-x64-ci
+## vscode-darwin-x64
+## vscode-darwin-x64-min-ci
+## vscode-darwin-x64-min
+## vscode-darwin-arm64-ci
+## vscode-darwin-arm64
+## vscode-darwin-arm64-min-ci
+## vscode-darwin-arm64-min
+## vscode-linux-x64-ci
+## vscode-linux-x64
+## vscode-linux-x64-min-ci
+## vscode-linux-x64-min
+## vscode
+## vscode-min
+## vscode-linux-armhf-ci
+## vscode-linux-armhf
+## vscode-linux-armhf-min-ci
+## vscode-linux-armhf-min
+## vscode-linux-arm64-ci
+## vscode-linux-arm64
+## vscode-linux-arm64-min-ci
+## vscode-linux-arm64-min
+## vscode-translations-export
+## vscode-translations-import
+## vscode-linux-x64-prepare-deb
+## vscode-linux-x64-build-deb
+## vscode-linux-x64-prepare-rpm
+## vscode-linux-x64-build-rpm
+## vscode-linux-x64-prepare-snap
+## vscode-linux-x64-build-snap
+## vscode-linux-armhf-prepare-deb
+## vscode-linux-armhf-build-deb
+## vscode-linux-armhf-prepare-rpm
+## vscode-linux-armhf-build-rpm
+## vscode-linux-armhf-prepare-snap
+## vscode-linux-armhf-build-snap
+## vscode-linux-arm64-prepare-deb
+## vscode-linux-arm64-build-deb
+## vscode-linux-arm64-prepare-rpm
+## vscode-linux-arm64-build-rpm
+## vscode-linux-arm64-prepare-snap
+## vscode-linux-arm64-build-snap
+## vscode-win32-x64-system-setup
+## vscode-win32-arm64-system-setup
+## vscode-win32-x64-user-setup
+## vscode-win32-arm64-user-setup
+## vscode-win32-x64-inno-updater
+## vscode-win32-arm64-inno-updater
