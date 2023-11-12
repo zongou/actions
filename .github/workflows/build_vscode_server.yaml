@@ -60,12 +60,6 @@ jobs:
           name: ${{ matrix.tasks }}
           path: vscode-*
 
-      - name: Delete workflow runs
-        uses: Mattraks/delete-workflow-runs@v2.0.4
-        with:
-          retain_days: 0
-          keep_minimum_runs: 1
-
       - name: Upload to Release Action
         uses: Shopify/upload-to-release@v1.0.1
         with:
