@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tasks: [vscode-reh-linux-x64-min, vscode-reh-linux-arm64-min, vscode-reh-web-linux-alpine-min, vscode-reh-web-alpine-arm64-min]
+        tasks: [vscode-reh-web-linux-x64-min, vscode-reh-web-linux-arm64-min, vscode-reh-web-alpine-arm64-min, vscode-reh-web-linux-alpine-min]
 
     steps:
       - uses: actions/checkout@main
