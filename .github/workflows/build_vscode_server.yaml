@@ -59,13 +59,3 @@ jobs:
         with:
           name: ${{ matrix.tasks }}
           path: vscode-*.tar.xz
-
-      - name: Upload to Release Action
-        uses: Shopify/upload-to-release@v1.0.1
-        with:
-          # Artifact name
-          name: debian-rootfs-${{ github.event.inputs.dist_version }}-${{ github.event.inputs.target_arch }}
-          # Path to the file to upload
-          path: debian-rootfs-${{ github.event.inputs.dist_version }}-${{ github.event.inputs.target_arch }}.tar.gz
-          # secrets.GITHUB_TOKEN
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
