@@ -16,15 +16,6 @@ jobs:
       matrix:
         tasks: [vscode-reh-web-linux-x64-min, vscode-reh-web-linux-arm64-min]
 
-    steps:
-      - uses: actions/checkout@main
-      - name: Install dependencies
-        run: |
-          node -v
-          sudo apt update || true
-          sudo apt install build-essential g++ libx11-dev libxkbfile-dev libsecret-1-dev libkrb5-dev python-is-python3
-          yarn global add node-gyp
-
       - name: Fetch source code and patch
         run: |
           git clone https://github.com/microsoft/vscode
@@ -34,6 +25,8 @@ jobs:
       - name: Build
         working-directory: vscode
         run: |
+          sudo apt-get install build-essential g++ libx11-dev libxkbfile-dev libsecret-1-dev libkrb5-dev python-is-python3
+
           # # Electron and browsers are not required
           # # for code-server build.
           export ELECTRON_SKIP_BINARY_DOWNLOAD=1
@@ -41,7 +34,8 @@ jobs:
 
           ## Cross build
           case "${{ matrix.tasks }}" in
-          *-linux-x64-*);;
+          *-linux-x64-*)
+            ;;
           *-linux-arm64-*)
             TARGET=aarch64-linux-gnu
             SYSROOT=${PWD}/../aarch64-linux-ubuntu
