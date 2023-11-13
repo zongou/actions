@@ -31,13 +31,7 @@ jobs:
           *-linux-arm64-*)
             TARGET=aarch64-linux-gnu
             SYSROOT=${PWD}/aarch64-linux-ubuntu
-
-            mkdir -p "${SYSROOT}"
-            (
-              cd "${SYSROOT}" &&
-              curl -Lk https://cdimage.ubuntu.com/ubuntu-base/releases/jammy/release/ubuntu-base-22.04-base-amd64.tar.gz | gzip -d | tar -x
-            )
-
+            sudo debootstrap --arch=arm64 stable "${SYSROOT}" http://deb.debian.org/debian/
 
             cp /etc/resolv.conf "${SYSROOT}/etc/resolv.conf"
             sudo chroot "${SYSROOT}" apt update
@@ -70,8 +64,6 @@ jobs:
           *-linux-arm64-*)
             TARGET=aarch64-linux-gnu
             SYSROOT=${PWD}/aarch64-linux-ubuntu
-
-            sudo debootstrap --arch=arm64 stable debian http://deb.debian.org/debian/
 
             sudo chroot "${SYSROOT}" apt update
             sudo chroot "${SYSROOT}" apt install libx11-dev
