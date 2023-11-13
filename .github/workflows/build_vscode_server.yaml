@@ -33,7 +33,7 @@ jobs:
             SYSROOT=${PWD}/aarch64-linux-ubuntu
 
             sudo apt install debootstrap
-            sudo debootstrap --arch=arm64 stable "${SYSROOT}" http://deb.debian.org/debian/
+            sudo debootstrap --variant=minbase --arch=arm64 stable "${SYSROOT}" http://deb.debian.org/debian/
 
             cp /etc/resolv.conf "${SYSROOT}/etc/resolv.conf"
             sudo chroot "${SYSROOT}" apt update
