@@ -39,7 +39,7 @@ jobs:
           *-linux-x64-*);;
           *-linux-arm64-*)
             TARGET=aarch64-linux-gnu
-            SYSROOT=${PWD}/aarch64-linux-ubuntu
+            SYSROOT=${PWD}/../aarch64-linux-ubuntu
 
             sudo apt install qemu-user-static binfmt-support debootstrap
             sudo debootstrap --variant=minbase --arch=arm64 --include=libx11-dev stable "${SYSROOT}" http://deb.debian.org/debian/
@@ -51,6 +51,7 @@ jobs:
             ;;
           esac
 
+          # aarch64-linux-gnu-g++: error: unrecognized command-line option ‘-m64’
           git clean -xdf
           yarn
           yarn gulp ${{ matrix.tasks }}
