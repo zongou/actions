@@ -21,9 +21,40 @@ jobs:
       - name: Install dependencies
         run: |
           node -v
-          sudo apt update
+          sudo apt update || true
           sudo apt install build-essential g++ libx11-dev libxkbfile-dev libsecret-1-dev libkrb5-dev python-is-python3
           yarn global add node-gyp
+
+          ## Cross build
+          case "${{ matrix.tasks }}" in
+          *-linux-x64-*);;
+          *-linux-arm64-*)
+            TARGET=aarch64-linux-gnu
+            SYSROOT=${PWD}/aarch64-linux-ubuntu
+
+            mkdir -p "${SYSROOT}"
+            (
+              cd "${SYSROOT}" &&
+              curl -Lk https://cdimage.ubuntu.com/ubuntu-base/releases/jammy/release/ubuntu-base-22.04-base-amd64.tar.gz | gzip -d | tar -x
+            )
+
+
+            cp /etc/resolv.conf "${SYSROOT}/etc/resolv.conf"
+            sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys \
+              0E98404D386FA1D9 \
+              6ED0E7B82643E131 \
+              F8D2585B8783D481 \
+              54404762BBB6E853 \
+              BDE6D2B9216EC7A8
+            sudo chroot "${SYSROOT}" apt update
+            sudo chroot "${SYSROOT}" apt install libx11-dev
+
+            sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+            export CC="$(which ${TARGET}-gcc) --sysroot=${SYSROOT}"
+            export CXX="$(which ${TARGET}-g++) -L${SYSROOT}/usr/lib/${TARGET} --sysroot=${SYSROOT}"
+            # export LD="$(which ${TARGET}-ld) --sysroot=${SYSROOT}"
+            ;;
+          esac
 
       - name: Fetch source code and patch
         run: |
