@@ -14,7 +14,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tasks: [vscode-reh-web-linux-x64-min, vscode-reh-web-linux-arm64-min, vscode-reh-web-alpine-arm64-min, vscode-reh-web-linux-alpine-min]
+        tasks:
+          [
+            vscode-reh-web-linux-x64-min,
+            vscode-reh-web-linux-arm64-min
+          ]
 
     steps:
       - uses: actions/checkout@main
@@ -34,11 +38,32 @@ jobs:
       - name: Build
         working-directory: vscode
         run: |
-          ## Install dependencies ====
           ## Electron and browsers are not required
           ## for code-server build.
           export ELECTRON_SKIP_BINARY_DOWNLOAD=1
           export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+
+          ## Cross build
+          case "${{ matrix.tasks }}" in
+          *-linux-x64-*);;
+          *-linux-arm64-*)
+            TARGET=aarch64-linux-gnu
+            SYSROOT=${PWD}/aarch64-linux-ubuntu
+
+            mkdir -p "${SYSROOT}"
+            (
+              cd "${SYSROOT}" &&
+              curl -Lk https://cdimage.ubuntu.com/ubuntu-base/releases/jammy/release/ubuntu-base-22.04-base-amd64.tar.gz | gzip -d | tar -x
+            )
+
+            sudo chroot "${SYSROOT}" apt update
+            sudo chroot "${SYSROOT}" apt instll libx11-dev
+
+            export CC="$(which ${TARGET}-gcc) --sysroot=${SYSROOT}"
+            export CXX="$(which ${TARGET}-g++-12) -L${SYSROOT}/usr/lib/${TARGET} --sysroot=${SYSROOT}"
+            # export LD="$(which ${TARGET}-ld) --sysroot=${SYSROOT}"
+            ;;
+          esac
 
           yarn
           yarn gulp ${{ matrix.tasks }}
@@ -46,7 +71,6 @@ jobs:
       - name: Test output
         run: |
           tree -L 1
-          find . -name "workbench.web.main.js" -exec head -n3 {} \;
 
       - name: Package
         run: |
