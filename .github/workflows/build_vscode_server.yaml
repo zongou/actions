@@ -51,6 +51,7 @@ jobs:
             ;;
           esac
 
+          git clean -xdf
           yarn
           yarn gulp ${{ matrix.tasks }}
 
