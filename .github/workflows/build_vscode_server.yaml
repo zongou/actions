@@ -44,9 +44,6 @@ jobs:
             sudo apt install qemu-user-static binfmt-support debootstrap
             sudo debootstrap --variant=minbase --arch=arm64 --include=libx11-dev stable "${SYSROOT}" http://deb.debian.org/debian/
 
-            sudo cp /etc/resolv.conf "${SYSROOT}/etc/resolv.conf"
-            sudo chroot "${SYSROOT}" apt update
-
             sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
             export CC="$(which ${TARGET}-gcc) --sysroot=${SYSROOT}"
             export CXX="$(which ${TARGET}-g++) -L${SYSROOT}/usr/lib/${TARGET} --sysroot=${SYSROOT}"
