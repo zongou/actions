@@ -55,11 +55,14 @@ jobs:
             export LD="$(which ${TARGET}-ld) --sysroot=${SYSROOT}"
             export npm_config_arch=aarch64
 
+            HOST_OS=linux
+            TARGET_ARCH=arm64
             export GYP_DEFINES="\
-                target_arch=${TARGET} \
-                v8_target_arch=${TARGET} \
-                host_os=${HOST_OS}"
-            
+              target_arch=${TARGET_ARCH} \
+              v8_target_arch=${TARGET_ARCH} \
+              android_target_arch=${TARGET_ARCH} \
+              host_os=${HOST_OS}"
+                        
             ;;
           esac
 
