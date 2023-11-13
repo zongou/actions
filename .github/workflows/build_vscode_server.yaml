@@ -52,7 +52,7 @@ jobs:
             sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
             export CC="$(which ${TARGET}-gcc) --sysroot=${SYSROOT}"
             export CXX="$(which ${TARGET}-g++) -L${SYSROOT}/usr/lib/${TARGET} --sysroot=${SYSROOT}"
-            # export LD="$(which ${TARGET}-ld) --sysroot=${SYSROOT}"
+            export LD="$(which ${TARGET}-ld) --sysroot=${SYSROOT}"
             ;;
           esac
 
