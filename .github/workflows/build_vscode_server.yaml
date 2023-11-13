@@ -57,8 +57,6 @@ jobs:
             ;;
           esac
 
-          # aarch64-linux-gnu-g++: error: unrecognized command-line option ‘-m64’
-          git clean -xdf
           yarn
           yarn gulp ${{ matrix.tasks }}
 
