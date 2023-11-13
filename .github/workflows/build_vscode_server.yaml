@@ -24,6 +24,7 @@ jobs:
           sudo apt update || true
           sudo apt install build-essential g++ libx11-dev libxkbfile-dev libsecret-1-dev libkrb5-dev python-is-python3
           yarn global add node-gyp
+          find /usr -name "gssapi.h"
 
       - name: Fetch source code and patch
         run: |
