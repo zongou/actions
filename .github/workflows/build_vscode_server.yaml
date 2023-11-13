@@ -51,22 +51,14 @@ jobs:
 
             sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
             export CC="$(which ${TARGET}-gcc) --sysroot=${SYSROOT}"
-            export CXX="$(which ${TARGET}-g++) -L${SYSROOT}/usr/lib/${TARGET} --sysroot=${SYSROOT}"
-            export LD="$(which ${TARGET}-ld) --sysroot=${SYSROOT}"
+            export CXX="$(which ${TARGET}-g++) --sysroot=${SYSROOT}"
             export npm_config_arch=aarch64
-
-            HOST_OS=linux
-            TARGET_ARCH=arm64
-            export GYP_DEFINES="\
-              target_arch=${TARGET_ARCH} \
-              v8_target_arch=${TARGET_ARCH} \
-              android_target_arch=${TARGET_ARCH} \
-              host_os=${HOST_OS}"
-                        
             ;;
           esac
 
-          git clean -xdf
+          echo "$CC"
+          echo ${npm_config_arch}
+
           yarn
           yarn gulp ${{ matrix.tasks }}
 
