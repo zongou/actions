@@ -31,6 +31,8 @@ jobs:
           *-linux-arm64-*)
             TARGET=aarch64-linux-gnu
             SYSROOT=${PWD}/aarch64-linux-ubuntu
+
+            sudo apt install debootstrap
             sudo debootstrap --arch=arm64 stable "${SYSROOT}" http://deb.debian.org/debian/
 
             cp /etc/resolv.conf "${SYSROOT}/etc/resolv.conf"
