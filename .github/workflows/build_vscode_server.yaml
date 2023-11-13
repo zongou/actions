@@ -27,8 +27,8 @@ jobs:
         run: |
           sudo apt-get install build-essential g++ libx11-dev libxkbfile-dev libsecret-1-dev libkrb5-dev python-is-python3
 
-          # # Electron and browsers are not required
-          # # for code-server build.
+          ## Electron and browsers are not required
+          ## for code-server build.
           export ELECTRON_SKIP_BINARY_DOWNLOAD=1
           export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 
