@@ -33,11 +33,10 @@ jobs:
             SYSROOT=${PWD}/aarch64-linux-ubuntu
 
             sudo apt install qemu-user-static binfmt-support debootstrap
-            sudo debootstrap --variant=minbase --arch=arm64 stable "${SYSROOT}" http://deb.debian.org/debian/
+            sudo debootstrap --variant=minbase --arch=arm64 --include=libx11-dev stable "${SYSROOT}" http://deb.debian.org/debian/
 
-            cp /etc/resolv.conf "${SYSROOT}/etc/resolv.conf"
+            sudo cp /etc/resolv.conf "${SYSROOT}/etc/resolv.conf"
             sudo chroot "${SYSROOT}" apt update
-            sudo chroot "${SYSROOT}" apt install libx11-dev
 
             sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
             export CC="$(which ${TARGET}-gcc) --sysroot=${SYSROOT}"
