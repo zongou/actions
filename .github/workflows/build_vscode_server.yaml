@@ -12,7 +12,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         tasks:
           [
@@ -57,10 +57,11 @@ jobs:
             )
 
             sudo chroot "${SYSROOT}" apt update
-            sudo chroot "${SYSROOT}" apt instll libx11-dev
+            sudo chroot "${SYSROOT}" apt install libx11-dev
 
+            sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
             export CC="$(which ${TARGET}-gcc) --sysroot=${SYSROOT}"
-            export CXX="$(which ${TARGET}-g++-12) -L${SYSROOT}/usr/lib/${TARGET} --sysroot=${SYSROOT}"
+            export CXX="$(which ${TARGET}-g++) -L${SYSROOT}/usr/lib/${TARGET} --sysroot=${SYSROOT}"
             # export LD="$(which ${TARGET}-ld) --sysroot=${SYSROOT}"
             ;;
           esac
