@@ -34,6 +34,11 @@ jobs:
       - name: Build
         working-directory: vscode
         run: |
+          # # Electron and browsers are not required
+          # # for code-server build.
+          export ELECTRON_SKIP_BINARY_DOWNLOAD=1
+          export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+
           ## Cross build
           case "${{ matrix.tasks }}" in
           *-linux-x64-*);;
