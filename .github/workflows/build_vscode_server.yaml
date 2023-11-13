@@ -56,12 +56,10 @@ jobs:
             export npm_config_arch=aarch64
 
             export GYP_DEFINES="\
-                target_arch=${TARGET_ARCH} \
-                v8_target_arch=${TARGET_ARCH} \
-                android_target_arch=${TARGET_ARCH} \
-                host_os=${HOST_OS} \
-                OS=android \
-                android_ndk_path=${ANDROID_NDK_PATH}"
+                target_arch=${TARGET} \
+                v8_target_arch=${TARGET} \
+                android_target_arch=${TARGET} \
+                host_os=${HOST_OS}"
             
             ;;
           esac
