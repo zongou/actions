@@ -77,7 +77,7 @@ jobs:
             TARGET=aarch64-linux-gnu
             SYSROOT=${PWD}/aarch64-linux-ubuntu
 
-            debootstrap --arch=amd64 xenial "${SYSROOT}" http://archive.ubuntu.com/ubuntu/
+            sudo debootstrap --arch=arm64 stable debian http://deb.debian.org/debian/
 
             sudo chroot "${SYSROOT}" apt update
             sudo chroot "${SYSROOT}" apt install libx11-dev
