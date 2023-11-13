@@ -56,6 +56,7 @@ jobs:
               curl -Lk https://cdimage.ubuntu.com/ubuntu-base/releases/jammy/release/ubuntu-base-22.04-base-amd64.tar.gz | gzip -d | tar -x
             )
 
+            cp /etc/resolv.conf "${SYSROOT}/etc/resolv.conf"
             sudo chroot "${SYSROOT}" apt update
             sudo chroot "${SYSROOT}" apt install libx11-dev
 
