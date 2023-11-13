@@ -81,12 +81,6 @@ jobs:
           name: debian-rootfs-${{ github.event.inputs.dist_version }}-${{ github.event.inputs.target_arch }}.tar.xz
           path: debian-rootfs-${{ github.event.inputs.dist_version }}-${{ github.event.inputs.target_arch }}.tar.xz
 
-      - name: Delete workflow runs
-        uses: Mattraks/delete-workflow-runs@v2.0.4
-        with:
-          retain_days: 0
-          keep_minimum_runs: 1
-
       - name: Release Upload
         uses: d1ceward/draft-assets-release-action@v2.0.0
         with:
