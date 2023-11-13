@@ -58,7 +58,6 @@ jobs:
             export GYP_DEFINES="\
                 target_arch=${TARGET} \
                 v8_target_arch=${TARGET} \
-                android_target_arch=${TARGET} \
                 host_os=${HOST_OS}"
             
             ;;
