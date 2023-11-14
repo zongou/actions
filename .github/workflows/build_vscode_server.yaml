@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           node -v
-          sudo apt update || true
+          sudo apt update
           sudo apt install build-essential g++ libx11-dev libxkbfile-dev libsecret-1-dev libkrb5-dev python-is-python3
           yarn global add node-gyp
 
@@ -58,9 +58,6 @@ jobs:
             export npm_config_arch=aarch64
             ;;
           esac
-
-          echo "$CC"
-          echo ${npm_config_arch}
 
           yarn
           yarn gulp ${{ matrix.tasks }}
