@@ -17,14 +17,6 @@ jobs:
         tasks: [vscode-reh-web-linux-x64-min, vscode-reh-web-linux-arm64-min]
 
     steps:
-      - uses: actions/checkout@main
-      - name: Install dependencies
-        run: |
-          node -v
-          sudo apt update
-          sudo apt install build-essential g++ libx11-dev libxkbfile-dev libsecret-1-dev libkrb5-dev python-is-python3
-          yarn global add node-gyp
-
       - name: Fetch source code and patch
         run: |
           git clone https://github.com/microsoft/vscode
@@ -34,6 +26,11 @@ jobs:
       - name: Build
         working-directory: vscode
         run: |
+          node -v
+          sudo apt update
+          sudo apt install build-essential g++ libx11-dev libxkbfile-dev libsecret-1-dev libkrb5-dev python-is-python3
+          yarn global add node-gyp
+
           # # Electron and browsers are not required
           # # for code-server build.
           export ELECTRON_SKIP_BINARY_DOWNLOAD=1
@@ -46,13 +43,14 @@ jobs:
             TARGET=aarch64-linux-gnu
             SYSROOT=${PWD}/../aarch64-linux-ubuntu
 
-            sudo apt install qemu-user-static binfmt-support debootstrap
+            sudo apt install qemu-user-static binfmt-support debootstrap gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+
+            ## aarch64 rootfs
             sudo debootstrap --variant=minbase --arch=arm64 --include="libx11-dev,libxkbfile-dev,libsecret-1-dev,libkrb5-dev" stable "${SYSROOT}" http://deb.debian.org/debian/
             # sudo cp /etc/resolv.conf "${SYSROOT}/etc/resolv.conf"
             # sudo chroot "${SYSROOT}" apt update
             # sudo chroot "${SYSROOT}" apt install libx11-dev libxkbfile-dev libsecret-1-dev libkrb5-dev
 
-            sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
             export CC="$(which ${TARGET}-gcc) --sysroot=${SYSROOT}"
             export CXX="$(which ${TARGET}-g++) --sysroot=${SYSROOT}"
             export npm_config_arch=aarch64
