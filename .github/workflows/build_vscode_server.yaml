@@ -44,12 +44,12 @@ jobs:
 
               matrix_task="$1"
               case "${matrix_task}" in
-              vscode-reh-web-linux-x64-*)
+              vscode-reh-web-linux-x64-min)
                   sudo apt install g++ libx11-dev libxkbfile-dev libsecret-1-dev libkrb5-dev
                   yarn
                   yarn gulp $matrix_task
                   ;;
-              vscode-reh-web-linux-arm64-*)
+              vscode-reh-web-linux-arm64-min)
                   sudo apt install qemu-user-static binfmt-support debootstrap gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
                   TARGET=aarch64-linux-gnu
                   SYSROOT=${PWD}/../aarch64-linux-ubuntu
@@ -60,14 +60,12 @@ jobs:
                   export CC="$(which ${TARGET}-gcc) --sysroot=${SYSROOT}"
                   export CXX="$(which ${TARGET}-g++) --sysroot=${SYSROOT}"
                   export npm_config_arch=aarch64
-
-                  yarn
-                  yarn gulp $matrix_task
                   ;;
-              vscode-reh-web-android-arm64-*)
+              vscode-reh-web-android-arm64-min)
                   ## Patch base on linux-arm64
-                  build_task vscode-reh-web-linux-arm64-min
-                  cp -r vscode-reh-web-linux-arm64 vscode-reh-web-android-arm64
+                  # build_task vscode-reh-web-linux-arm64-min
+                  _RELEASE_DIR=vscode-reh-web-android-arm64
+                  cp -r vscode-reh-web-linux-arm64 "${_RELEASE_DIR}"
 
                   export npm_config_arch=aarch64
                   export GYP_DEFINES="\
@@ -134,13 +132,13 @@ jobs:
                           yarn add spdlog node-pty
                   )
 
-                  replace_in_dir "${_TMP_BUILD_DIR}" "${matrix_task}" spdlog node-pty
-                  replace_watcher "${matrix_task}"
-                  android_fix_ptyhostmainjs "${matrix_task}"
+                  replace_in_dir "${_TMP_BUILD_DIR}" "${_RELEASE_DIR}" spdlog node-pty
+                  replace_watcher "${_RELEASE_DIR}"
+                  android_fix_ptyhostmainjs "${_RELEASE_DIR}"
+                  # cp /home/user/Downloads/nodejs-v18.18.2-android24-arm64/bin/node "${matrix_task}/node"
                   ;;
               esac
           }
-
 
           build_task "${{ matrix.tasks}}"
 
