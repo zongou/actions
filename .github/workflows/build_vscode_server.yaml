@@ -62,8 +62,8 @@ jobs:
               vscode-reh-web-android-arm64-*)
                   ## Patch base on linux-arm64
                   build_task vscode-reh-web-linux-arm64-min
-                  _RELEASE_DIR="vscode-reh-web-android-arm64"
-                  cp -r vscode-reh-web-linux-arm64 "${_RELEASE_DIR}"
+                  _RELEASE_DIR="${PWD}/../vscode-reh-web-android-arm64"
+                  cp -r "${PWD}/../vscode-reh-web-linux-arm64" "${_RELEASE_DIR}"
 
                   export npm_config_arch=aarch64
                   export GYP_DEFINES="\
