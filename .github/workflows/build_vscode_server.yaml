@@ -14,7 +14,12 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        tasks: [vscode-reh-web-linux-x64-min, vscode-reh-web-linux-arm64-min, vscode-reh-web-android-arm64-min]
+        tasks:
+          [
+            vscode-reh-web-linux-x64-min,
+            vscode-reh-web-linux-arm64-min,
+            vscode-reh-web-android-arm64-min,
+          ]
 
     steps:
       - name: Fetch source code and patch
@@ -55,6 +60,9 @@ jobs:
                   export CC="$(which ${TARGET}-gcc) --sysroot=${SYSROOT}"
                   export CXX="$(which ${TARGET}-g++) --sysroot=${SYSROOT}"
                   export npm_config_arch=aarch64
+
+                  yarn
+                  yarn gulp $matrix_task
                   ;;
               vscode-reh-web-android-arm64-*)
                   ## Patch base on linux-arm64
