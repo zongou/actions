@@ -37,51 +37,45 @@ jobs:
               ## for code-server build.
               export ELECTRON_SKIP_BINARY_DOWNLOAD=1
               export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-
               sudo apt update
               sudo apt install build-essential python-is-python3
               yarn global add node-gyp
-
               matrix_task="$1"
               case "${matrix_task}" in
-              vscode-reh-web-linux-x64-min)
+              vscode-reh-web-linux-x64-*)
                   sudo apt install g++ libx11-dev libxkbfile-dev libsecret-1-dev libkrb5-dev
                   yarn
                   yarn gulp $matrix_task
                   ;;
-              vscode-reh-web-linux-arm64-min)
+              vscode-reh-web-linux-arm64-*)
                   sudo apt install qemu-user-static binfmt-support debootstrap gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
                   TARGET=aarch64-linux-gnu
                   SYSROOT=${PWD}/../aarch64-linux-ubuntu
-
                   ## aarch64 rootfs
                   sudo debootstrap --variant=minbase --arch=arm64 --include="libx11-dev,libxkbfile-dev,libsecret-1-dev,libkrb5-dev" stable "${SYSROOT}" http://deb.debian.org/debian/
-
                   export CC="$(which ${TARGET}-gcc) --sysroot=${SYSROOT}"
                   export CXX="$(which ${TARGET}-g++) --sysroot=${SYSROOT}"
                   export npm_config_arch=aarch64
+                  yarn
+                  yarn gulp $matrix_task
                   ;;
-              vscode-reh-web-android-arm64-min)
+              vscode-reh-web-android-arm64-*)
                   ## Patch base on linux-arm64
                   build_task vscode-reh-web-linux-arm64-min
-                  _RELEASE_DIR=vscode-reh-web-android-arm64
+                  _RELEASE_DIR="vscode-reh-web-android-arm64"
                   cp -r vscode-reh-web-linux-arm64 "${_RELEASE_DIR}"
 
                   export npm_config_arch=aarch64
                   export GYP_DEFINES="\
-                      host_os=linux \
-                      OS=android"
-
+                                host_os=linux \
+                                OS=android"
                   TARGET=aarch64-linux-android24
                   NDK_BIN_DIR="${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin"
-
                   ## Android libutil
                   mkdir -p android_libs
                   echo "INPUT(-lc)" >android_libs/libutil.so
-
                   export CC="$(command -v "${NDK_BIN_DIR}/clang++") --target=${TARGET}"
                   export CXX="$(command -v "${NDK_BIN_DIR}/clang++") --target=${TARGET} -L${PWD}/android_libs"
-
                   android_fix_ptyhostmainjs() {
                       if test $# -gt 0 && test -d "$1"; then
                           find "${1}" -name "ptyHostMain.js" | while IFS= read -r file; do
@@ -90,10 +84,9 @@ jobs:
                           done
                       fi
                   }
-
                   replace_watcher() {
                       (
-                          dir=$(find "$1" -path "*/@parcel")
+                          dir=$(find "$1" -name "watcher" -path "*/node_modules/@parcel/watcher")
                           test $? -ne 0 && exit 1
                           echo "replace watcher (${dir}/watcher)"
                           cd "${dir}"
@@ -103,14 +96,11 @@ jobs:
                           mv package watcher
                       )
                   }
-
                   replace_in_dir() {
                       echo replacing modules ...
-
                       _TMP_BUILD_DIR="$1"
                       _TMP_APP_DIR="$2"
                       shift 2
-
                       for module_name in "$@"; do
                           find "${_TMP_APP_DIR}" \( -path "*/node_modules/${module_name}" -or -path "*/node_modules/@*/${module_name}" \) -prune | while IFS= read -r module_dir; do
                               echo "replace ${module_name} (${module_dir})"
@@ -122,20 +112,16 @@ jobs:
                           done
                       done
                   }
-
                   ## Build modules
                   _TMP_BUILD_DIR=tmp_build
-
                   (
                       mkdir -p "${_TMP_BUILD_DIR}" &&
                           cd "${_TMP_BUILD_DIR}" &&
                           yarn add spdlog node-pty
                   )
-
                   replace_in_dir "${_TMP_BUILD_DIR}" "${_RELEASE_DIR}" spdlog node-pty
                   replace_watcher "${_RELEASE_DIR}"
                   android_fix_ptyhostmainjs "${_RELEASE_DIR}"
-                  # cp /home/user/Downloads/nodejs-v18.18.2-android24-arm64/bin/node "${matrix_task}/node"
                   ;;
               esac
           }
