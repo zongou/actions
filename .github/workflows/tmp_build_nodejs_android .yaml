@@ -1,0 +1,42 @@
+name: tmp Build nodejs android
+run-name: Build nodejs-v${{ github.event.inputs.node_version }}-android-${{ github.event.inputs.target_arch }}, mirror:${{ github.event.inputs.node_mirror }}
+on:
+  push:
+  # workflow_dispatch:
+  #   inputs:
+  #     node_version:
+  #       description: "node version:"
+  #       default: 20.10.0
+  #       required: true
+  #     android_sdk_version:
+  #       description: "android sdk version:"
+  #       default: "24"
+  #       required: true
+  #     target_arch:
+  #       description: "target arch:"
+  #       default: arm64
+  #       required: true
+  #     node_mirror:
+  #       description: "nodejs source mirror:[default|github]"
+  #       default: default
+  #       required: true
+
+permissions:
+  actions: write
+  contents: write
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@main
+      - name: Print env
+        run: |
+          env
+          cat /proc/cpuinfo
+          tree -L 2 ${GITHUB_WORKSPACE}
+
+      - name: Build nodejs
+        run: |
+          ./packages/nodejs/build.sh
