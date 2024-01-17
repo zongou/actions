@@ -29,6 +29,9 @@ patch -f ./deps/v8/src/trap-handler/trap-handler.h -up1 <"${WORK_DIR}/packages/n
 # ../deps/v8/src/base/debug/stack_trace_posix.cc:156:9: error: use of undeclared identifier 'backtrace_symbols'
 echo >test/cctest/test_crypto_clienthello.cc
 
+# g++: error: unrecognized command-line option ‘-mbranch-protection=standard’
+patch -up1 <"${WORK_DIR}/packages/nodejs/node_gyp_mbranch-protection.patch" || true
+
 case ${TARGET} in
 aarch64-linux-android*)
 	DEST_CPU="arm64"
