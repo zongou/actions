@@ -39,4 +39,5 @@ jobs:
 
       - name: Build nodejs
         run: |
+          sudo apt install ninja-build
           ./packages/nodejs/build.sh
