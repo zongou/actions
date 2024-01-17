@@ -37,6 +37,16 @@ jobs:
           cat /proc/cpuinfo
           tree -L 2 ${GITHUB_WORKSPACE}
 
+      - name: Configure cache
+        id: cache-run_url
+        uses: actions/cache@v3
+        with:
+          path: |
+            sources/nodejs*
+          key: workflow_template-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: |
+            workflow_template-
+
       - name: Build nodejs
         run: |
           sudo apt install ninja-build

@@ -5,7 +5,7 @@ if ! "${CONFIG_LOADED+1}"; then
 	set -eux
 
 	if test "${ANDROID_NDK_ROOT+1}"; then
-		export PATH="${PATH}:${ANDROID_NDK_ROOT}/bin"
+		export PATH="${PATH}:${ANDROID_NDK_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin"
 	fi
 
 	export TARGET="${TARGET:-aarch64-linux-android24}"
