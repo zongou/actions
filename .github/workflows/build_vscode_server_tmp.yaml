@@ -66,7 +66,7 @@ jobs:
 
       - name: Package
         run: |
-          tar -c "${dir}" | xz -T0 > "${GITHUB_WORKSPACE}/${{matrix.tasks}}.tar.xz"
+          tar -c vscode-web | xz -T0 > "${GITHUB_WORKSPACE}/${{matrix.tasks}}.tar.xz"
 
       - name: Upload
         uses: actions/upload-artifact@main
