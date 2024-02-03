@@ -50,6 +50,7 @@ jobs:
 
       - name: Build
         run: |
+          sudo apt install g++ libx11-dev libxkbfile-dev libsecret-1-dev libkrb5-dev
           cd vscode
           ## Electron and browsers are not required
           ## for code-server build.
