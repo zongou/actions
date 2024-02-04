@@ -40,26 +40,14 @@ jobs:
           #   6254eb1f4d0,
           #   b052d34e5cc
           # ]
+          # [
+          #   5d992684162, bad
+          #   7425fbc5f30,
+          #   e984f918dc1,good
+          # ]
           [
             7425fbc5f30,
-            e984f918dc1,
-            e8ce9b3b29f,
-            df2dd86b0c1,
-            64783a4eb9e,
-            8de9ba22b2c,
-            cb6c07d46d8,
-            9891465832b,
-            74825844e1c,
-            73f8cc3cb3d,
-            54cbd06803b,
-            c668e31a4f2,
-            c028993bd1b,
-            a424b054e91,
-            6254eb1f4d0,
-            319b62aa16d,
-            c51428211f8,
-            c90a53543b6,
-            fba876b51f7,
+            7425fbc5f30
           ]
 
     steps:
