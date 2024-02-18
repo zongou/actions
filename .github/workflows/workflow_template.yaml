@@ -81,7 +81,7 @@ jobs:
 
       - name: Configure cache
         id: cache-run_url
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             run_url
@@ -91,7 +91,7 @@ jobs:
 
       # - name: Restore cached run_url
       #   id: cache-restore
-      #   uses: actions/cache/restore@v3
+      #   uses: actions/cache/restore@v4
       #   with:
       #     path: |
       #       run_url
@@ -115,7 +115,7 @@ jobs:
       # - name: Cache data if Restoring cache missed
       #   id: cache-save
       #   if: steps.cache-restore.outputs.cache-hit == 'true'
-      #   uses: actions/cache/save@v3
+      #   uses: actions/cache/save@v4
       #   with:
       #     path: |
       #       run_url
