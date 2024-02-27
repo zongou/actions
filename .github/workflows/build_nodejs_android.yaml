@@ -5,7 +5,7 @@ on:
     inputs:
       node_version:
         description: "node version:"
-        default: 20.10.0
+        default: 21.6.2
         required: true
       android_sdk_version:
         description: "android sdk version:"
@@ -73,6 +73,9 @@ jobs:
 
           # g++: error: unrecognized command line option ‘-msign-return-address=all’
           sed -i "s|o\['cflags'\]+=\['-msign-return-address=all'\]|warn('-msign-return-address=all no longer exists!')|" configure.py
+
+          # g++: error: unrecognized command-line option ‘-mbranch-protection=standard’
+          sed -i "s^-mbranch-protection=standard^^" node.gyp
 
           # ../deps/zlib/cpu_features.c:43:10: fatal error: 'cpu-features.h' file not found
           if test -f ./deps/zlib/cpu_features.c; then
