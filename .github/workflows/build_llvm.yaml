@@ -72,38 +72,41 @@ jobs:
             ln -snf ../zig_wrapper bin/${tool}
           done
 
-      - name: Get zig
-        run: |
-          curl -Lk https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz | xz -d | tar -x
+          ls bin
+          file bin/cc
 
-      - name: Checkout llvm-project
-        uses: actions/checkout@v4.1.1
-        with:
-          repository: llvm/llvm-project
-          ref: ${{github.event.inputs.tag}}
-          fetch-depth: 1
+      # - name: Get zig
+      #   run: |
+      #     curl -Lk https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz | xz -d | tar -x
+
+      # - name: Checkout llvm-project
+      #   uses: actions/checkout@v4.1.1
+      #   with:
+      #     repository: llvm/llvm-project
+      #     ref: ${{github.event.inputs.tag}}
+      #     fetch-depth: 1
       
-      - name: Build
-        run: |
-          sudo apt install ninja-build
-          export ZIG=${PWD}/zig-linux-x86_64-${ZIG_VERSION}/zig
-          export CC=${PWD}/bin/cc
-          export CXX=${PWD}/bin/c++
+      # - name: Build
+      #   run: |
+      #     sudo apt install ninja-build
+      #     export ZIG=${PWD}/zig-linux-x86_64-${ZIG_VERSION}/zig
+      #     export CC=${PWD}/bin/cc
+      #     export CXX=${PWD}/bin/c++
 
-          mkdir build && cd build
-          TARGET=aarch64-linux-musl
-          cmake \
-            ../llvm \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;lld;lldb;mlir;openmp;polly" \
-            -DLLVM_TARGETS_TO_BUILD="AArch64" \
-            -DLLVM_HOST_TRIPLE=${TARGET} \
-            -G "Ninja"
+      #     mkdir build && cd build
+      #     TARGET=aarch64-linux-musl
+      #     cmake \
+      #       ../llvm \
+      #       -DCMAKE_BUILD_TYPE=Release \
+      #       -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;lld;lldb;mlir;openmp;polly" \
+      #       -DLLVM_TARGETS_TO_BUILD="AArch64" \
+      #       -DLLVM_HOST_TRIPLE=${TARGET} \
+      #       -G "Ninja"
 
-          cmake --build .
+      #     cmake --build .
 
-          tree bin
-          file bin/*
+      #     tree bin
+      #     file bin/*
 
       # - name: Upload
       #   uses: actions/upload-artifact@main
