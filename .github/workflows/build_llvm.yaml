@@ -69,7 +69,7 @@ jobs:
             *)
               cat <<EOF 1>&2
           Usage:
-            ln -s zig_wrapperar [cc|c++|dlltool|lib|ranlib|objcopy|ld.lld]
+            ln -s zig_wrapper [cc|c++|dlltool|lib|ranlib|objcopy|ld.lld]
           EOF
               exit
               ;;
@@ -92,6 +92,9 @@ jobs:
           echo ${ZIG_VERSION}
           ls -al
           zig-linux-x86_64-${ZIG_VERSION}/zig zen
+
+          cat zig_wrapper
+          ./bi/cc --version
 
 
           sudo apt install ninja-build
