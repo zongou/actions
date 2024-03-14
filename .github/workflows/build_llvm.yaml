@@ -94,7 +94,7 @@ jobs:
           zig-linux-x86_64-${ZIG_VERSION}/zig zen
 
           cat zig_wrapper
-          ./bi/cc --version
+          ./bin/cc --version
 
 
           sudo apt install ninja-build
