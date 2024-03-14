@@ -1,7 +1,6 @@
 name: Build llvm
 run-name: Build llvm ${{github.event.inputs.tag}}
 on:
-  push:
   workflow_dispatch:
     inputs:
       tag:
