@@ -95,6 +95,10 @@ jobs:
           export CC=${PWD}/bin/cc
           export CXX=${PWD}/bin/c++
 
+          file zig_wrapper
+          file bin/cc
+          cat bin/cc
+
           mkdir build && cd build
           cmake \
             ../llvm \
