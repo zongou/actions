@@ -76,12 +76,12 @@ jobs:
         run: |
           curl -Lk https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz | xz -d | tar -x
 
-      # - name: Checkout llvm-project
-      #   uses: actions/checkout@v4.1.1
-      #   with:
-      #     repository: llvm/llvm-project
-      #     ref: ${{github.event.inputs.tag}}
-      #     fetch-depth: 1
+      - name: Checkout llvm-project
+        uses: actions/checkout@v4.1.1
+        with:
+          repository: llvm/llvm-project
+          ref: ${{github.event.inputs.tag}}
+          fetch-depth: 1
       
       - name: Build
         run: |
@@ -92,15 +92,15 @@ jobs:
           export CXX=${PWD}/bin/c++
           ${CC} --version
 
-      #     mkdir build && cd build
-      #     TARGET=aarch64-linux-musl
-      #     cmake \
-      #       ../llvm \
-      #       -DCMAKE_BUILD_TYPE=Release \
-      #       -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;lld;lldb;mlir;openmp;polly" \
-      #       -DLLVM_TARGETS_TO_BUILD="AArch64" \
-      #       -DLLVM_HOST_TRIPLE=${TARGET} \
-      #       -G "Ninja"
+          mkdir build && cd build
+          TARGET=aarch64-linux-musl
+          cmake \
+            ../llvm \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;lld;lldb;mlir;openmp;polly" \
+            -DLLVM_TARGETS_TO_BUILD="AArch64" \
+            -DLLVM_HOST_TRIPLE=${TARGET} \
+            -G "Ninja"
 
       #     cmake --build .
 
