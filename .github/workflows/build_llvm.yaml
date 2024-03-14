@@ -1,6 +1,7 @@
 name: Build llvm
 run-name: Build llvm ${{github.event.inputs.tag}}
 on:
+  push:
   workflow_dispatch:
     inputs:
       tag:
@@ -21,19 +22,8 @@ jobs:
       ZIG_VERSION: 0.11.0
 
     steps:
-      - name: Checkout llvm-project
-        uses: actions/checkout@v4.1.1
-        with:
-          repository: llvm/llvm-project
-          ref: ${{github.event.inputs.tag}}
-          fetch-depth: 1
-
       - name: Setup zig
         run: |
-          if ! test -e zig-linux-x86_64-${ZIG_VERSION}; then
-            curl -Lk https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz | xz -d | tar -x
-          fi
-
           cat <<-'EOF' >zig_wrapper
           #!/bin/sh
           set -eu
@@ -86,6 +76,19 @@ jobs:
             ln -snf ../zig_wrapper bin/${tool}
           done
           ls bin
+          exit 1
+
+          # if ! test -e zig-linux-x86_64-${ZIG_VERSION}; then
+          #   curl -Lk https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz | xz -d | tar -x
+          # fi
+
+      - name: Checkout llvm-project
+        uses: actions/checkout@v4.1.1
+        with:
+          repository: llvm/llvm-project
+          ref: ${{github.event.inputs.tag}}
+          fetch-depth: 1
+      
       - name: Build
         run: |
           sudo apt install ninja-build
