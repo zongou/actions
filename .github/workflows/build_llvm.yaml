@@ -82,7 +82,7 @@ jobs:
 
       - name:
         run: |
-          ls bin
+          ls -l
 
       # - name: Checkout llvm-project
       #   uses: actions/checkout@v4.1.1
