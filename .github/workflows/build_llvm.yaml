@@ -57,10 +57,7 @@ jobs:
               esac
               ;;
             *)
-              cat <<EOF 1>&2
-          Usage:
-            ln -s zig_wrapper [cc|c++|dlltool|lib|ranlib|objcopy|ld.lld]
-          EOF
+              printf "Usage:\nln -s zig_wrapper [cc|c++|dlltool|lib|ranlib|objcopy|ld.lld]\n" >&2
               exit
               ;;
             esac
