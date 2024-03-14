@@ -91,7 +91,7 @@ jobs:
 
           echo ${ZIG_VERSION}
           ls -al
-          ls zig-linux-x86_64-${ZIG_VERSION}
+          zig-linux-x86_64-${ZIG_VERSION}/zig zen
 
 
           sudo apt install ninja-build
@@ -100,7 +100,7 @@ jobs:
           cd build
           TARGET=aarch64-linux-musl
 
-          export ZIG=${PWD}/zig-linux-x86_64-${ZIG_VERSION}
+          export ZIG=${PWD}/zig-linux-x86_64-${ZIG_VERSION}/zig
           export CC=${PWD}/bin/cc
           export CXX=${PWD}/bin/c++
 
