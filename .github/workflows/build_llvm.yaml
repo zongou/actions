@@ -88,6 +88,12 @@ jobs:
 
       - name: Build
         run: |
+
+          echo ${ZIG_VERSION}
+          ls -al
+          ls zig-linux-x86_64-${ZIG_VERSION}
+
+
           sudo apt install ninja-build
 
           mkdir build
