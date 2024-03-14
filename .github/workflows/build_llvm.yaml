@@ -26,12 +26,12 @@ jobs:
         with:
           repository: llvm/llvm-project
           ref: ${{github.event.inputs.tag}}
+          fetch-depth: 1
 
       - name: Setup zig
         run: |
           if ! test -e zig-linux-x86_64-${ZIG_VERSION}; then
-            curl -LkO https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz
-            xz -d <zig-linux-x86_64-${ZIG_VERSION}.tar.xz | tar -x
+            curl -Lk https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz | xz -d | tar -x
           fi
 
           cat <<-'EOF' >zig_wrapper
@@ -95,6 +95,7 @@ jobs:
           TARGET=aarch64-linux-musl
 
           export PATH=${PATH}:${PWD}/zig-linux-x86_64-${ZIG_VERSION}
+          zig version
           export CC=${PWD}/bin/cc
           export CXX=${PWD}/bin/c++
 
