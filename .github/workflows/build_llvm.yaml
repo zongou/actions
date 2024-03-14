@@ -75,47 +75,49 @@ jobs:
           for tool in cc c++ dlltool lib ranlib objcopy ld.lld; do
             ln -snf ../zig_wrapper bin/${tool}
           done
-          ls bin
-          exit 1
 
           # if ! test -e zig-linux-x86_64-${ZIG_VERSION}; then
           #   curl -Lk https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz | xz -d | tar -x
           # fi
 
-      - name: Checkout llvm-project
-        uses: actions/checkout@v4.1.1
-        with:
-          repository: llvm/llvm-project
-          ref: ${{github.event.inputs.tag}}
-          fetch-depth: 1
-      
-      - name: Build
+      - name:
         run: |
-          sudo apt install ninja-build
+          ls bin
 
-          TARGET=aarch64-linux-musl
+      # - name: Checkout llvm-project
+      #   uses: actions/checkout@v4.1.1
+      #   with:
+      #     repository: llvm/llvm-project
+      #     ref: ${{github.event.inputs.tag}}
+      #     fetch-depth: 1
+      
+      # - name: Build
+      #   run: |
+      #     sudo apt install ninja-build
 
-          export ZIG=${PWD}/zig-linux-x86_64-${ZIG_VERSION}/zig
-          export CC=${PWD}/bin/cc
-          export CXX=${PWD}/bin/c++
+      #     TARGET=aarch64-linux-musl
 
-          file zig_wrapper
-          file bin/cc
-          cat bin/cc
+      #     export ZIG=${PWD}/zig-linux-x86_64-${ZIG_VERSION}/zig
+      #     export CC=${PWD}/bin/cc
+      #     export CXX=${PWD}/bin/c++
 
-          mkdir build && cd build
-          cmake \
-            ../llvm \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;lld;lldb;mlir;openmp;polly" \
-            -DLLVM_TARGETS_TO_BUILD="AArch64" \
-            -DLLVM_HOST_TRIPLE=${TARGET} \
-            -G "Ninja"
+      #     file zig_wrapper
+      #     file bin/cc
+      #     cat bin/cc
 
-          cmake --build .
+      #     mkdir build && cd build
+      #     cmake \
+      #       ../llvm \
+      #       -DCMAKE_BUILD_TYPE=Release \
+      #       -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;lld;lldb;mlir;openmp;polly" \
+      #       -DLLVM_TARGETS_TO_BUILD="AArch64" \
+      #       -DLLVM_HOST_TRIPLE=${TARGET} \
+      #       -G "Ninja"
 
-          tree bin
-          file bin/*
+      #     cmake --build .
+
+      #     tree bin
+      #     file bin/*
 
       # - name: Upload
       #   uses: actions/upload-artifact@main
