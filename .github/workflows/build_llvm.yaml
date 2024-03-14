@@ -85,23 +85,17 @@ jobs:
           for tool in cc c++ dlltool lib ranlib objcopy ld.lld; do
             ln -snf ../zig_wrapper bin/${tool}
           done
-
-          export ZIG=${PWD}/zig-linux-x86_64-${ZIG_VERSION}/zig
-          file bin/cc
-          ./bin/cc --version
-
       - name: Build
         run: |
           sudo apt install ninja-build
 
-          mkdir build
-          cd build
           TARGET=aarch64-linux-musl
 
           export ZIG=${PWD}/zig-linux-x86_64-${ZIG_VERSION}/zig
           export CC=${PWD}/bin/cc
           export CXX=${PWD}/bin/c++
 
+          mkdir build && cd build
           cmake \
             ../llvm \
             -DCMAKE_BUILD_TYPE=Release \
