@@ -87,17 +87,15 @@ jobs:
         run: |
           sudo apt install ninja-build
           export ZIG=${PWD}/zig-linux-x86_64-${ZIG_VERSION}/zig
-          ./bin/cc --version
           export CC=${PWD}/bin/cc
           export CXX=${PWD}/bin/c++
-          ${CC} --version
 
           mkdir build && cd build
           TARGET=aarch64-linux-musl
           cmake \
             ../llvm \
             -DCMAKE_BUILD_TYPE=Release \
-            -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;lld;lldb;mlir;openmp;polly" \
+            -DLLVM_ENABLE_PROJECTS="clang;" \
             -DLLVM_TARGETS_TO_BUILD="AArch64" \
             -DLLVM_HOST_TRIPLE=${TARGET} \
             -G "Ninja"
