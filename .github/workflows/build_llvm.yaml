@@ -22,7 +22,7 @@ jobs:
       ZIG_VERSION: 0.11.0
 
     steps:
-      - name: Setup zig
+      - name: Create zig wrapper
         run: |
           cat <<-'EOF' >zig_wrapper
           #!/bin/sh
@@ -73,50 +73,38 @@ jobs:
             ln -snf ../zig_wrapper bin/${tool}
           done
 
-          # if ! test -e zig-linux-x86_64-${ZIG_VERSION}; then
-          #   curl -Lk https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz | xz -d | tar -x
-          # fi
-
-      - name:
+      - name: Get zig
         run: |
-          ls -l
-          mkdir -p bin
-          ls -l
+          curl -Lk https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz | xz -d | tar -x
 
-      # - name: Checkout llvm-project
-      #   uses: actions/checkout@v4.1.1
-      #   with:
-      #     repository: llvm/llvm-project
-      #     ref: ${{github.event.inputs.tag}}
-      #     fetch-depth: 1
+      - name: Checkout llvm-project
+        uses: actions/checkout@v4.1.1
+        with:
+          repository: llvm/llvm-project
+          ref: ${{github.event.inputs.tag}}
+          fetch-depth: 1
       
-      # - name: Build
-      #   run: |
-      #     sudo apt install ninja-build
+      - name: Build
+        run: |
+          sudo apt install ninja-build
+          export ZIG=${PWD}/zig-linux-x86_64-${ZIG_VERSION}/zig
+          export CC=${PWD}/bin/cc
+          export CXX=${PWD}/bin/c++
 
-      #     TARGET=aarch64-linux-musl
+          mkdir build && cd build
+          TARGET=aarch64-linux-musl
+          cmake \
+            ../llvm \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;lld;lldb;mlir;openmp;polly" \
+            -DLLVM_TARGETS_TO_BUILD="AArch64" \
+            -DLLVM_HOST_TRIPLE=${TARGET} \
+            -G "Ninja"
 
-      #     export ZIG=${PWD}/zig-linux-x86_64-${ZIG_VERSION}/zig
-      #     export CC=${PWD}/bin/cc
-      #     export CXX=${PWD}/bin/c++
+          cmake --build .
 
-      #     file zig_wrapper
-      #     file bin/cc
-      #     cat bin/cc
-
-      #     mkdir build && cd build
-      #     cmake \
-      #       ../llvm \
-      #       -DCMAKE_BUILD_TYPE=Release \
-      #       -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;lld;lldb;mlir;openmp;polly" \
-      #       -DLLVM_TARGETS_TO_BUILD="AArch64" \
-      #       -DLLVM_HOST_TRIPLE=${TARGET} \
-      #       -G "Ninja"
-
-      #     cmake --build .
-
-      #     tree bin
-      #     file bin/*
+          tree bin
+          file bin/*
 
       # - name: Upload
       #   uses: actions/upload-artifact@main
