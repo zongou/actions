@@ -5,7 +5,7 @@ on:
     inputs:
       tag:
         description: "Release tag:"
-        default: "llvmorg-17.0.6"
+        default: "llvmorg-18.1.1"
         required: true
 
 jobs:
@@ -17,6 +17,8 @@ jobs:
     #   fail-fast: false
     #   matrix:
     #     target_arch: [matrix0, matrix1]
+    env:
+      ZIG_VERSION: 0.11.0
 
     steps:
       - name: Checkout llvm-project
@@ -25,19 +27,83 @@ jobs:
           repository: llvm/llvm-project
           ref: ${{github.event.inputs.tag}}
 
+      - name: Setup zig
+        run: |
+          if ! test -e zig-linux-x86_64-${ZIG_VERSION}; then
+            curl -LkO https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz
+            xz -d <zig-linux-x86_64-${ZIG_VERSION}.tar.xz | tar -x
+          fi
+
+          cat <<-'EOF' >zig_wrapper
+          #!/bin/sh
+          set -eu
+
+          if test -h "$0" && ! test "$(basename "$(readlink "$0")")" = "$(basename "$(readlink -f "$0")")"; then
+            BIN=$(readlink "$0") && cd "$(dirname "$0")" && "${BIN}" "$@"
+          else
+            WRAPPER="$(basename "$0")"
+            case "${WRAPPER}" in
+            ar | cc | c++ | dlltool | lib | ranlib | objcopy | ld.lld)
+              set -- "${WRAPPER}" "$@"
+
+              ## Zig doesn't properly handle these flags so we have to rewrite/ignore.
+              ## None of these affect the actual compilation target.
+              ## https://github.com/ziglang/zig/issues/9948
+              case "${WRAPPER}" in
+              cc | c++)
+                for argv in "$@"; do
+                  case "${argv}" in
+                  -Wp,-MD,*)
+                    set -- "$@" "-MD" "-MF" "$(echo "$argv" | sed 's/^-Wp,-MD,//')"
+                    ;;
+                  -Wl,--warn-common | -Wl,--verbose | -Wl,-Map,*) ;;
+                  *)
+                    set -- "$@" "${argv}"
+                    ;;
+                  esac
+                  shift
+                done
+                ;;
+              esac
+              ;;
+            *)
+              cat <<EOF 1>&2
+          Usage:
+            ln -s zig_wrapperar [cc|c++|dlltool|lib|ranlib|objcopy|ld.lld]
+          EOF
+              exit
+              ;;
+            esac
+
+            # echo ${WRAPPER_BIN} "$@"
+            "${ZIG-zig}" "$@"
+          fi
+          EOF
+          chmod +x zig_wrapper
+
+          mkdir -p bin
+          for tool in cc c++ dlltool lib ranlib objcopy ld.lld; do
+            ln -snf ../zig_wrapper bin/${tool}
+          done
+
       - name: Build
         run: |
+          sudo apt install ninja-build
+
           mkdir build
           cd build
-          # -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;lld;lldb;mlir;openmp;polly" \
+          TARGET=aarch64-linux-musl
 
-          sudo apt install ninja-build
+          export PATH=${PATH}:${PWD}/zig-linux-x86_64-${ZIG_VERSION}
+          export CC=${PWD}/bin/cc
+          export CXX=${PWD}/bin/c++
 
           cmake \
             ../llvm \
             -DCMAKE_BUILD_TYPE=Release \
+            -DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;compiler-rt;lld;lldb;mlir;openmp;polly" \
             -DLLVM_TARGETS_TO_BUILD="AArch64" \
-            -DLLVM_HOST_TRIPLE=aarch64-linux-musl \
+            -DLLVM_HOST_TRIPLE=${TARGET} \
             -G "Ninja"
 
           cmake --build .
