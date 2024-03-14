@@ -86,17 +86,12 @@ jobs:
             ln -snf ../zig_wrapper bin/${tool}
           done
 
-      - name: Build
-        run: |
-
-          echo ${ZIG_VERSION}
-          ls -al
-          zig-linux-x86_64-${ZIG_VERSION}/zig zen
-
-          cat zig_wrapper
+          export ZIG=${PWD}/zig-linux-x86_64-${ZIG_VERSION}/zig
+          file bin/cc
           ./bin/cc --version
 
-
+      - name: Build
+        run: |
           sudo apt install ninja-build
 
           mkdir build
