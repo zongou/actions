@@ -85,6 +85,7 @@ jobs:
           for tool in cc c++ dlltool lib ranlib objcopy ld.lld; do
             ln -snf ../zig_wrapper bin/${tool}
           done
+          ls bin
       - name: Build
         run: |
           sudo apt install ninja-build
