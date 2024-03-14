@@ -76,13 +76,6 @@ jobs:
         run: |
           curl -Lk https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz | xz -d | tar -x
 
-      - name: Test
-        run: |
-          ls bin
-          file bin/cc
-          export ZIG=${PWD}/zig-linux-x86_64-${ZIG_VERSION}/zig
-          ./bin/cc --version
-
       # - name: Checkout llvm-project
       #   uses: actions/checkout@v4.1.1
       #   with:
@@ -90,12 +83,14 @@ jobs:
       #     ref: ${{github.event.inputs.tag}}
       #     fetch-depth: 1
       
-      # - name: Build
-      #   run: |
-      #     sudo apt install ninja-build
-      #     export ZIG=${PWD}/zig-linux-x86_64-${ZIG_VERSION}/zig
-      #     export CC=${PWD}/bin/cc
-      #     export CXX=${PWD}/bin/c++
+      - name: Build
+        run: |
+          sudo apt install ninja-build
+          export ZIG=${PWD}/zig-linux-x86_64-${ZIG_VERSION}/zig
+          ./bin/cc --version
+          export CC=${PWD}/bin/cc
+          export CXX=${PWD}/bin/c++
+          ${CC} --version
 
       #     mkdir build && cd build
       #     TARGET=aarch64-linux-musl
