@@ -76,12 +76,12 @@ jobs:
         run: |
           curl -Lk https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz | xz -d | tar -x
 
-        - name: Test
-          run: |
-            ls bin
-            file bin/cc
-            export ZIG=${PWD}/zig-linux-x86_64-${ZIG_VERSION}/zig
-            ./bin/cc --version
+      - name: Test
+        run: |
+          ls bin
+          file bin/cc
+          export ZIG=${PWD}/zig-linux-x86_64-${ZIG_VERSION}/zig
+          ./bin/cc --version
 
       # - name: Checkout llvm-project
       #   uses: actions/checkout@v4.1.1
