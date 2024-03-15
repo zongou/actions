@@ -82,7 +82,7 @@ jobs:
       - name: Get zig
         run: |
           curl -Lk https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz | xz -d | tar -x
-      
+
       - name: Build
         run: |
           sudo apt install ninja-build
@@ -93,22 +93,59 @@ jobs:
 
           mkdir build && cd build
           TARGET=aarch64-linux-musl
-          cmake \
-            ../llvm \
+
+          # cmake ../llvm \
+          # -Wno-dev \
+          # -G Ninja \
+          # $LLVM_CMAKE_FLAGS \
+          # $HOST_CMAKE_FLAGS \
+          # -DCMAKE_BUILD_TYPE=Release \
+          # -DCMAKE_INSTALL_PREFIX="$OUTPUT_DIR" \
+          # -DCROSS_TOOLCHAIN_FLAGS_NATIVE="" \
+          # -DLLVM_ENABLE_PROJECTS="clang;lld" \
+          # -DLLVM_ENABLE_TERMINFO=OFF \
+          # -DLLVM_ENABLE_LIBXML2=FORCE_ON \
+          # -DLLVM_INCLUDE_EXAMPLES=OFF \
+          # -DLLVM_INCLUDE_BENCHMARKS=OFF \
+          # -DLLVM_BUILD_LLVM_DYLIB=ON \
+          # -DLLVM_BUILD_STATIC=OFF \
+          # -DLLVM_LINK_LLVM_DYLIB=ON \
+          # -DLLVM_TARGETS_TO_BUILD="all"
+
+          cmake ../llvm \
+            -Wno-dev \
+            -G Ninja \
             -DCMAKE_BUILD_TYPE=Release \
-            -DLLVM_ENABLE_PROJECTS="clang;" \
-            -DLLVM_TARGETS_TO_BUILD="AArch64" \
-            -DLLVM_HOST_TRIPLE=${TARGET} \
-            -G "Ninja"
+            -DCMAKE_INSTALL_PREFIX="${PWD}/output" \
+            -DCROSS_TOOLCHAIN_FLAGS_NATIVE="" \
+            -DLLVM_ENABLE_PROJECTS="clang;lld" \
+            -DLLVM_ENABLE_TERMINFO=OFF \
+            -DLLVM_INCLUDE_EXAMPLES=OFF \
+            -DLLVM_INCLUDE_BENCHMARKS=OFF \
+            -DLLVM_BUILD_LLVM_DYLIB=ON \
+            -DLLVM_BUILD_STATIC=ON \
+            -DLLVM_LINK_LLVM_DYLIB=ON \
+            -DLLVM_TARGETS_TO_BUILD="all"
+
+          # cmake \
+          #   ../llvm \
+          #   -DCMAKE_BUILD_TYPE=Release \
+          #   -DLLVM_ENABLE_PROJECTS="clang;" \
+          #   -DLLVM_TARGETS_TO_BUILD="AArch64" \
+          #   -DLLVM_HOST_TRIPLE=${TARGET} \
+          #   -G "Ninja"
 
           cmake --build .
 
           tree bin
           file bin/*
 
+          tree output
+          file output/*
+
       - name: xz package
         run: |
-          mv bin clang+llvm-18.1.1-aarch64-linux-musl
+          mv output clang+llvm-18.1.1-aarch64-linux-musl
           tar -c clang+llvm-18.1.1-aarch64-linux-musl | xz -T0 > clang+llvm-18.1.1-aarch64-linux-musl.tar.xz
 
       - name: Upload release
