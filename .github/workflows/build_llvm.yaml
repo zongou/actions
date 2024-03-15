@@ -50,6 +50,7 @@ jobs:
             EOF
 
             cat clang/tools/CMakeLists.txt
+            df -h
             
       - name: Create zig wrapper
         run: |
