@@ -89,7 +89,7 @@ jobs:
           export ZIG=${PWD}/zig-linux-x86_64-${ZIG_VERSION}/zig
           export CC=${PWD}/bin/cc
           export CXX=${PWD}/bin/c++
-          expot LDFLAGS="-s"
+          export LDFLAGS="-s"
 
           mkdir build && cd build
           TARGET=aarch64-linux-musl
