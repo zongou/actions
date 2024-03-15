@@ -5,12 +5,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  template_job:
-  name: Template job
-  runs-on: ubuntu-latest
+  job1:
+    name: "job1"
+    runs-on: ubuntu-latest
 
-  - steps:
-    - name: Task 1
+    steps:
+      - name: step1
       run: |
         pwd
         df -h
