@@ -11,8 +11,8 @@ jobs:
 
     steps:
       - name: step1
-      run: |
-        pwd
-        df -h
-        nproc --all
-        cat /proc/cpuinfo
+        run: |
+          pwd
+          df -h
+          nproc --all
+          cat /proc/cpuinfo
