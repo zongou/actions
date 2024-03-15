@@ -6,10 +6,13 @@ on:
 
 jobs:
   template_job:
+  name: Template job
+  runs-on: ubuntu-latest
 
-  - name: Task 1
-    run: |
-      pwd
-      df -h
-      nproc --all
-      cat /proc/cpuinfo
+  - steps:
+    - name: Task 1
+      run: |
+        pwd
+        df -h
+        nproc --all
+        cat /proc/cpuinfo
