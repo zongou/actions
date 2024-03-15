@@ -1,0 +1,15 @@
+name: Template
+on:
+  push:
+    paths: ".github/workflows/template.yaml"
+  workflow_dispatch:
+
+jobs:
+  template_job:
+
+  - name: Task 1
+    run: |
+      pwd
+      df -h
+      nproc --all
+      cat /proc/cpuinfo
