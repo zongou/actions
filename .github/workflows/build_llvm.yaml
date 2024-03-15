@@ -117,48 +117,15 @@ jobs:
           mkdir build && cd build
           TARGET=aarch64-linux-musl
 
-          # cmake ../llvm \
-          # -Wno-dev \
-          # -G Ninja \
-          # $LLVM_CMAKE_FLAGS \
-          # $HOST_CMAKE_FLAGS \
-          # -DCMAKE_BUILD_TYPE=Release \
-          # -DCMAKE_INSTALL_PREFIX="$OUTPUT_DIR" \
-          # -DCROSS_TOOLCHAIN_FLAGS_NATIVE="" \
-          # -DLLVM_ENABLE_PROJECTS="clang;lld" \
-          # -DLLVM_ENABLE_TERMINFO=OFF \
-          # -DLLVM_ENABLE_LIBXML2=FORCE_ON \
-          # -DLLVM_INCLUDE_EXAMPLES=OFF \
-          # -DLLVM_INCLUDE_BENCHMARKS=OFF \
-          # -DLLVM_BUILD_LLVM_DYLIB=ON \
-          # -DLLVM_BUILD_STATIC=OFF \
-          # -DLLVM_LINK_LLVM_DYLIB=ON \
-          # -DLLVM_TARGETS_TO_BUILD="all"
-
           cmake ../llvm \
-            -Wno-dev \
             -G Ninja \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_INSTALL_PREFIX="${PWD}/output" \
-            -DCROSS_TOOLCHAIN_FLAGS_NATIVE="" \
-            -DLLVM_ENABLE_PROJECTS="clang;lld" \
-            -DLLVM_ENABLE_TERMINFO=OFF \
-            -DLLVM_INCLUDE_EXAMPLES=OFF \
-            -DLLVM_INCLUDE_BENCHMARKS=OFF \
-            -DLLVM_BUILD_LLVM_DYLIB=ON \
-            -DLLVM_BUILD_STATIC=ON \
-            -DLLVM_LINK_LLVM_DYLIB=ON \
-            -DLLVM_TARGETS_TO_BUILD="all"
+            -DLLVM_ENABLE_PROJECTS="clang" \
+            -DLLVM_TARGETS_TO_BUILD="all" \
+            -DLLVM_HOST_TRIPLE=${TARGET}
 
-          # cmake \
-          #   ../llvm \
-          #   -DCMAKE_BUILD_TYPE=Release \
-          #   -DLLVM_ENABLE_PROJECTS="clang;" \
-          #   -DLLVM_TARGETS_TO_BUILD="AArch64" \
-          #   -DLLVM_HOST_TRIPLE=${TARGET} \
-          #   -G "Ninja"
-
-          cmake --build .
+          cmake --build . --target install/strip
 
           tree bin
           file bin/*
