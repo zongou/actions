@@ -126,7 +126,7 @@ jobs:
             -DLLVM_TARGETS_TO_BUILD="all" \
             -DLLVM_HOST_TRIPLE=${TARGET}
 
-          cmake --build . --target install/strip
+          cmake --build . --target install/strip || df -h
 
           tree bin
           file bin/*
