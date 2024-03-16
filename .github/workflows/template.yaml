@@ -4,9 +4,13 @@ on:
     paths: ".github/workflows/template.yaml"
   workflow_dispatch:
 
+permissions:
+  contents: write
+  actions: write
+
 jobs:
   job1:
-    name: "job1, build ${{matrix.target}}"
+    name: "job1: build ${{matrix.target}}"
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -17,10 +21,6 @@ jobs:
             "x86-linux-musl",
             "x86_64-linux-musl",
           ]
-          # - "aarch64-linux-musl"
-          # - "arm-linux-musleabi"
-          # - "x86-linux-musl"
-          # - "x86_64-linux-musl"
 
     steps:
       - name: step1
@@ -29,3 +29,27 @@ jobs:
           df -h
           nproc --all
           cat /proc/cpuinfo
+
+      - name: Upload
+        if: matrix.target = "aarch64-linux-musl"
+        uses: actions/upload-artifact@main
+        with:
+          name: upload
+          path: /etc/os-release
+
+      - name: Release
+        uses: ncipollo/release-action@v1.13.0
+        with:
+          tag: "template"
+          artifacts: /etc/os-release
+          allowUpdates: true
+          replacesArtifacts: true
+          body: |
+            [action](${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}})
+
+      - name: Delete workflow runs
+        uses: Mattraks/delete-workflow-runs@v2.0.6
+        with:
+          delete_workflow_pattern: "template.yaml"
+          retain_days: 0
+          keep_minimum_runs: 1
