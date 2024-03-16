@@ -32,7 +32,7 @@ jobs:
           cat /proc/cpuinfo
 
       - name: Upload
-        if: ${{matrix.target = "aarch64-linux-musl"}}
+        if: ${{matrix.target == "aarch64-linux-musl"}}
         uses: actions/upload-artifact@main
         with:
           name: upload
