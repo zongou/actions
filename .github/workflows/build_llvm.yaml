@@ -16,8 +16,8 @@ jobs:
         target:
           [
             aarch64-linux-musl,
+            arm-linux-musleabi,
             x86_64-linux-musl,
-            armv7-linux-musl,
             i686-linux-musl,
           ]
     env:
