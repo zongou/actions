@@ -107,7 +107,7 @@ jobs:
 
       - name: Build
         run: |
-          sudo apt install ninja-build
+          sudo apt install ninja-build binfmt-support
           export ZIG=${PWD}/zig-linux-x86_64-${ZIG_VERSION}/zig
           TARGET=aarch64-linux-musl
           export CC="${PWD}/bin/cc --target=${TARGET}"
@@ -122,11 +122,7 @@ jobs:
             -DCMAKE_INSTALL_PREFIX="${PWD}/output" \
             -DLLVM_ENABLE_PROJECTS="clang" \
             -DLLVM_TARGETS_TO_BUILD="all" \
-            -DLLVM_HOST_TRIPLE=${TARGET} \
-            -DLLVM_BUILD_RUNTIME=Off \
-            -DLLVM_INCLUDE_TESTS=Off \
-            -DLLVM_INCLUDE_EXAMPLES=Off \
-            -DLLVM_ENABLE_BACKTRACES=Off \
+            -DLLVM_HOST_TRIPLE=${TARGET}
 
           cmake --build . --target install/strip
 
