@@ -11,8 +11,15 @@ on:
 jobs:
   build-llvm:
     runs-on: ubuntu-latest
-    matrix:
-      target: [aarch64-linux-musl, x86_64-linux-musl, armv7-linux-musl, i686-linux-musl]
+    strategy:
+      matrix:
+        target:
+          [
+            aarch64-linux-musl,
+            x86_64-linux-musl,
+            armv7-linux-musl,
+            i686-linux-musl,
+          ]
     env:
       ZIG_VERSION: 0.11.0
 
@@ -102,10 +109,11 @@ jobs:
           curl -Lk https://ziglang.org/download/${ZIG_VERSION}/zig-linux-x86_64-${ZIG_VERSION}.tar.xz | xz -d | tar -x
 
       - name: Build
+        env:
+          TARGET: ${{matrix.target}}
         run: |
           sudo apt install ninja-build binfmt-support qemu-user-static
           export ZIG=${PWD}/zig-linux-x86_64-${ZIG_VERSION}/zig
-          TARGET=aarch64-linux-musl
           export CC="${PWD}/bin/cc --target=${TARGET}"
           export CXX="${PWD}/bin/c++ --target=${TARGET}"
           export LDFLAGS="-s"
