@@ -11,12 +11,8 @@ on:
 jobs:
   build-llvm:
     runs-on: ubuntu-latest
-    # env:
-    #   arch: ${{github.event.inputs.msg}}
-    # strategy:
-    #   fail-fast: false
-    #   matrix:
-    #     target_arch: [matrix0, matrix1]
+    matrix:
+      target: [aarch64-linux-musl, x86_64-linux-musl, armv7-linux-musl, i686-linux-musl]
     env:
       ZIG_VERSION: 0.11.0
 

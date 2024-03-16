@@ -8,12 +8,13 @@ jobs:
   job1:
     name: "job1, build ${{matrix.target}}"
     runs-on: ubuntu-latest
-    matrix:
-      target:
-        - "aarch64-linux-musl"
-        - "arm-linux-musleabi"
-        - "x86-linux-musl"
-        - "x86_64-linux-musl"
+    strategy:
+      matrix:
+        target:
+          - "aarch64-linux-musl"
+          - "arm-linux-musleabi"
+          - "x86-linux-musl"
+          - "x86_64-linux-musl"
 
     steps:
       - name: step1
