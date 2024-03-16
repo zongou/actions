@@ -118,7 +118,8 @@ jobs:
             -DCMAKE_INSTALL_PREFIX="${PWD}/output" \
             -DLLVM_ENABLE_PROJECTS="clang" \
             -DLLVM_TARGETS_TO_BUILD="all" \
-            -DLLVM_HOST_TRIPLE=${TARGET}
+            -DLLVM_HOST_TRIPLE=${TARGET} \
+            -DCMAKE_BUILD_WITH_INSTALL_RPATH=OFF
 
           cmake --build . --target install/strip
 
