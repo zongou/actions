@@ -107,7 +107,7 @@ jobs:
 
       - name: Build
         run: |
-          sudo apt install ninja-build binfmt-support
+          sudo apt install ninja-build binfmt-support qemu-user-static
           export ZIG=${PWD}/zig-linux-x86_64-${ZIG_VERSION}/zig
           TARGET=aarch64-linux-musl
           export CC="${PWD}/bin/cc --target=${TARGET}"
