@@ -32,9 +32,8 @@ jobs:
         run: |
             # error: unsupported linker arg: -Bsymbolic-functions
             # https://github.com/ziglang/zig-bootstrap/commit/451966c163c7a2e9769d62fd77585af1bc9aca4b
-            # sed -i "s/add_clang_subdirectory(clang-shlib)/#/" clang/tools/CMakeLists.txt
 
-            git reset --hard
+            # sed -i "s/add_clang_subdirectory(clang-shlib)/#/" clang/tools/CMakeLists.txt
             base64 -d <<-EOF | patch -up1
             ZGlmZiAtLWdpdCBhL2NsYW5nL3Rvb2xzL0NNYWtlTGlzdHMudHh0IGIvY2xhbmcvdG9vbHMvQ01h
             a2VMaXN0cy50eHQKaW5kZXggZjYwZGI2ZWYwYi4uNTc2OWU4NTQ1MiAxMDA2NDQKLS0tIGEvY2xh
@@ -50,7 +49,6 @@ jobs:
             EOF
 
             cat clang/tools/CMakeLists.txt
-            df -h
             
       - name: Create zig wrapper
         run: |
@@ -87,7 +85,7 @@ jobs:
               esac
               ;;
             *)
-              printf "Usage:\nln -s zig_wrapper [cc|c++|dlltool|lib|ranlib|objcopy|ld.lld]\n" >&2
+              printf "Usage:\n  ln -s zig_wrapper [cc|c++|dlltool|lib|ranlib|objcopy|ld.lld]\n" >&2
               exit
               ;;
             esac
@@ -111,12 +109,12 @@ jobs:
         run: |
           sudo apt install ninja-build
           export ZIG=${PWD}/zig-linux-x86_64-${ZIG_VERSION}/zig
-          export CC=${PWD}/bin/cc
-          export CXX=${PWD}/bin/c++
+          TARGET=aarch64-linux-musl
+          export CC="${PWD}/bin/cc --target=${TARGET}"
+          export CXX="${PWD}/bin/c++ --target=${TARGET}"
           export LDFLAGS="-s"
 
-          mkdir build && cd build
-          TARGET=aarch64-linux-musl
+          mkdir -p build && cd build
 
           cmake ../llvm \
             -G Ninja \
@@ -126,7 +124,7 @@ jobs:
             -DLLVM_TARGETS_TO_BUILD="all" \
             -DLLVM_HOST_TRIPLE=${TARGET}
 
-          cmake --build . --target install/strip || df -h && du -ahd0 ../../
+          cmake --build . --target install/strip
 
           tree bin
           file bin/*
@@ -136,7 +134,7 @@ jobs:
 
       - name: xz package
         run: |
-          mv output clang+llvm-18.1.1-aarch64-linux-musl
+          mv build/output clang+llvm-18.1.1-aarch64-linux-musl
           tar -c clang+llvm-18.1.1-aarch64-linux-musl | xz -T0 > clang+llvm-18.1.1-aarch64-linux-musl.tar.xz
 
       - name: Upload release
