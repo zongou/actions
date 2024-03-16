@@ -12,8 +12,8 @@ jobs:
   build-llvm:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        fail-fast: false
         target:
           [
             aarch64-linux-musl,
