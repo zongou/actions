@@ -125,7 +125,7 @@ jobs:
             -G Ninja \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_INSTALL_PREFIX="${PWD}/output" \
-            -DLLVM_ENABLE_PROJECTS="clang" \
+            -DLLVM_ENABLE_PROJECTS="llvm" \
             -DLLVM_TARGETS_TO_BUILD="all" \
             -DLLVM_HOST_TRIPLE=${TARGET} \
             -DCMAKE_BUILD_WITH_INSTALL_RPATH=OFF
