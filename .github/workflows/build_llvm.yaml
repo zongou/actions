@@ -128,7 +128,9 @@ jobs:
             -DLLVM_ENABLE_PROJECTS="llvm" \
             -DLLVM_TARGETS_TO_BUILD="all" \
             -DLLVM_HOST_TRIPLE=${TARGET} \
-            -DCMAKE_SKIP_INSTALL_RPATH=TRUE
+            -CMAKE_SKIP_RPATH=TRUE \
+            -CMAKE_SKIP_BUILD_RPATH=TRUE \
+            -CMAKE_SKIP_INSTALL_RPATH=TRUE
 
           cmake --build . --target install
 
