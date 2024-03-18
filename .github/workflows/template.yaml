@@ -32,6 +32,12 @@ jobs:
           nproc --all
           cat /proc/cpuinfo
 
+      - name: set env
+        run: echo DATE=$(date +"%Y-%m-%d %H:%M:%S") >> ${GITHUB_ENV}
+
+      - name: get env
+        run: echo env.DATE=${{env.DATE}}
+
       - name: Upload
         if: ${{matrix.target == 'aarch64-linux-musl'}}
         uses: actions/upload-artifact@main
