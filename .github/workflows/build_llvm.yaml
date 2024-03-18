@@ -128,7 +128,7 @@ jobs:
             -DLLVM_ENABLE_PROJECTS="llvm" \
             -DLLVM_TARGETS_TO_BUILD="all" \
             -DLLVM_HOST_TRIPLE=${TARGET} \
-            -CMAKE_SKIP_RPATH=TRUE
+            -DCMAKE_SKIP_RPATH=TRUE
 
           cmake --build . --target install
 
@@ -144,7 +144,7 @@ jobs:
           tar -c clang+llvm-18.1.1-aarch64-linux-musl | xz -T0 > clang+llvm-18.1.1-aarch64-linux-musl.tar.xz
 
       - name: Upload release
-        uses: ncipollo/release-action@v1.13.0
+        uses: ncipollo/release-action@v1.14.0
         with:
           tag: "llvm"
           artifacts: clang+llvm-18.1.1-aarch64-linux-musl.tar.xz

@@ -1,96 +1,46 @@
-name: Test workflow
+name: Build llvm
+run-name: Build llvm ${{github.event.inputs.tag}}
 on:
-  push:
-    paths: ".github/workflows/test.yaml"
   workflow_dispatch:
     inputs:
-      msg:
-        description: "message:"
-        default: "Hello World!"
+      tag:
+        description: "Release tag:"
+        default: "llvmorg-18.1.1"
         required: true
-      # tag:
-      #   description: "Release tag:"
-      #   default: "v1.0"
-      #   required: true
 
 jobs:
-  build:
-    permissions:
-      contents: write
-    name: "Matrix msg: ${{matrix.msg}}"
+  build-llvm:
     runs-on: ubuntu-latest
-    env:
-      arch: ${{github.event.inputs.msg}}
     strategy:
       fail-fast: false
       matrix:
-        msg:
-          - "Hello matrix!"
+        target:
+          [
+            aarch64-linux-musl,
+            x86_64-linux-musl,
+          ]
+    env:
+      ZIG_VERSION: 0.11.0
 
     steps:
-      - name: Checkout
+      - name: Checkout llvm-project
         uses: actions/checkout@v4.1.1
         with:
-          repository: ${{github.repository}}
-          # ref: ${{github.event.inputs.tag}}
+          repository: llvm/llvm-project
+          ref: ${{github.event.inputs.tag}}
+          fetch-depth: 1
 
-      - name: Print system info
+      - name: xz package
         run: |
-          cat /etc/os-release
-          cat /proc/cpuinfo
-          echo "Available cpu count: $(nproc)"
-
-      - name: Print env
-        run: env
-
-      - name: Test
-        run: |
-          command -v upx && upx --version
-          command -v clang && clang --version
-
-          tree -L 2 ${GITHUB_WORKSPACE}
-
-          heredoc(){
-            cat <<EOF
-          heredoc_content
-          EOF
-
-            cat <<EOF
-            heredoc_content
-          EOF
-
-            cat <<-EOF
-          heredoc_content
-          EOF
-
-          cat <<-EOF
-            heredoc_content
-          EOF
-          }
-
-          heredoc
-
-      - name: Upload
-        uses: actions/upload-artifact@main
-        with:
-          name: os-release
-          path: /etc/os-release
+          mv README.md clang+llvm-18.1.1-aarch64-linux-musl
+          tar -c clang+llvm-18.1.1-aarch64-linux-musl | xz -T0 > clang+llvm-18.1.1-aarch64-linux-musl.tar.xz
 
       - name: Upload release
-        uses: ncipollo/release-action@v1.13.0
+        uses: ncipollo/release-action@v1.14.0
         with:
-          tag: "v1.0.0"
-          artifacts: |
-            /etc/os-release
-            /etc/resolv.conf
+          tag: "llvm"
+          artifacts: clang+llvm-18.1.1-aarch64-linux-musl.tar.xz
           allowUpdates: true
           replacesArtifacts: true
           body: |
-            * BINUTILS_VER = 2.41
-            * GCC_VER = 13.2.0
-            * MUSL_VER = 1.2.4
-            * GMP_VER = 6.3.0
-            * MPC_VER = 1.3.1
-            * MPFR_VER = 4.2.1
-            * ISL_VER = 0.26
-            * LINUX_VER = 6.6.2
+            [action](${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}})
