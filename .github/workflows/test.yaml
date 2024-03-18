@@ -1,4 +1,4 @@
-name: Build llvm
+name: Test
 run-name: Build llvm ${{github.event.inputs.tag}}
 on:
   workflow_dispatch:
