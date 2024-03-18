@@ -10,6 +10,9 @@ on:
 
 jobs:
   build-llvm:
+    permissions: 
+      contents: write
+      actions: write
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
